@@ -55,27 +55,13 @@ export const LiveMicIcon: React.FC<LiveMicIconProps> = ({
 
       {/* Animating Curved Sound Waves Just Above Microphone */}
       {showWaves && (
-        <g
-          stroke={accentColor}
-          strokeWidth="3.5"
-          strokeLinecap="round"
-          fill="none"
-        >
+        <g stroke={accentColor} strokeWidth="3.5" strokeLinecap="round" fill="none">
           {/* Inner curve */}
-          <path
-            d="M 41 27 A 11 7 0 0 1 59 27"
-            className="sound-wave-1"
-          />
+          <path d="M 41 27 A 11 7 0 0 1 59 27" className="sound-wave-1" />
           {/* Middle curve */}
-          <path
-            d="M 34 20 A 19 11 0 0 1 66 20"
-            className="sound-wave-2"
-          />
+          <path d="M 34 20 A 19 11 0 0 1 66 20" className="sound-wave-2" />
           {/* Outer curve */}
-          <path
-            d="M 27 13 A 27 15 0 0 1 73 13"
-            className="sound-wave-3"
-          />
+          <path d="M 27 13 A 27 15 0 0 1 73 13" className="sound-wave-3" />
         </g>
       )}
 
@@ -92,12 +78,7 @@ export const LiveMicIcon: React.FC<LiveMicIconProps> = ({
       />
 
       {/* Capsule Midline Divider */}
-      <path
-        d="M 38 50 H 62"
-        stroke={primaryColor}
-        strokeWidth="4"
-        strokeLinecap="round"
-      />
+      <path d="M 38 50 H 62" stroke={primaryColor} strokeWidth="4" strokeLinecap="round" />
 
       {/* Microphone Cradle */}
       <path
@@ -108,12 +89,7 @@ export const LiveMicIcon: React.FC<LiveMicIconProps> = ({
       />
 
       {/* Vertical Neck */}
-      <path
-        d="M 50 74 V 84"
-        stroke={primaryColor}
-        strokeWidth="5"
-        strokeLinecap="round"
-      />
+      <path d="M 50 74 V 84" stroke={primaryColor} strokeWidth="5" strokeLinecap="round" />
 
       {/* Stand Base */}
       <rect
@@ -129,5 +105,3 @@ export const LiveMicIcon: React.FC<LiveMicIconProps> = ({
     </svg>
   );
 };
-
-export default LiveMicIcon;

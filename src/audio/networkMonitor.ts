@@ -35,12 +35,21 @@ class NetworkPrivacyMonitor {
     // Monitor XHR
     const originalOpen = XMLHttpRequest.prototype.open;
     const originalSend = XMLHttpRequest.prototype.send;
-    const self = this;
+    const recordRequest = (url: string, method: string, payloadSize: number) =>
+      this.recordRequest(url, method, payloadSize);
 
-    XMLHttpRequest.prototype.open = function (method: string, url: string | URL, ...rest: unknown[]) {
+    XMLHttpRequest.prototype.open = function (
+      method: string,
+      url: string | URL,
+      ...rest: unknown[]
+    ) {
       (this as unknown as { _url: string; _method: string })._url = url.toString();
       (this as unknown as { _url: string; _method: string })._method = method;
-      return (originalOpen as unknown as (...args: unknown[]) => void).apply(this, [method, url, ...rest]);
+      return (originalOpen as unknown as (...args: unknown[]) => void).apply(this, [
+        method,
+        url,
+        ...rest,
+      ]);
     };
 
     XMLHttpRequest.prototype.send = function (body?: Document | XMLHttpRequestBodyInit | null) {
@@ -50,7 +59,7 @@ class NetworkPrivacyMonitor {
       else if (body instanceof Blob) size = body.size;
       else if (body instanceof ArrayBuffer) size = body.byteLength;
 
-      self.recordRequest(info._url || 'unknown', info._method || 'GET', size);
+      recordRequest(info._url || 'unknown', info._method || 'GET', size);
       return originalSend.apply(this, [body]);
     };
   }

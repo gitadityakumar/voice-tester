@@ -21,18 +21,18 @@ export const Visualizers: React.FC<VisualizersProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<'waveform' | 'spectrum'>('waveform');
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const peakHoldRef = useRef<number>(-100);
+  const [peakHoldDb, setPeakHoldDb] = useState<number>(-100);
   const peakHoldTimerRef = useRef<number>(0);
 
   // Peak hold logic
   useEffect(() => {
-    if (stats.peakDb > peakHoldRef.current) {
-      peakHoldRef.current = stats.peakDb;
+    if (stats.peakDb > peakHoldDb) {
+      setPeakHoldDb(stats.peakDb);
       peakHoldTimerRef.current = Date.now();
     } else if (Date.now() - peakHoldTimerRef.current > 1200) {
-      peakHoldRef.current = Math.max(-100, peakHoldRef.current - 1.5);
+      setPeakHoldDb((prev) => Math.max(-100, prev - 1.5));
     }
-  }, [stats.peakDb]);
+  }, [stats.peakDb, peakHoldDb]);
 
   // Canvas drawing loop
   useEffect(() => {
@@ -121,12 +121,7 @@ export const Visualizers: React.FC<VisualizersProps> = ({
           barGrad.addColorStop(1, '#3b82f6');
 
           ctx.fillStyle = barGrad;
-          ctx.fillRect(
-            i * barWidth + 1,
-            height - barHeight,
-            Math.max(1, barWidth - 2),
-            barHeight
-          );
+          ctx.fillRect(i * barWidth + 1, height - barHeight, Math.max(1, barWidth - 2), barHeight);
         }
       }
 
@@ -149,7 +144,7 @@ export const Visualizers: React.FC<VisualizersProps> = ({
 
   const peakPercent = dbToPercent(stats.peakDb);
   const rmsPercent = dbToPercent(stats.rmsDb);
-  const peakHoldPercent = dbToPercent(peakHoldRef.current);
+  const peakHoldPercent = dbToPercent(peakHoldDb);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -199,12 +194,7 @@ export const Visualizers: React.FC<VisualizersProps> = ({
 
         <CardContent>
           <div className="relative w-full h-44 rounded-xl overflow-hidden bg-neutral-900 border border-neutral-800 shadow-inner flex items-center justify-center">
-            <canvas
-              ref={canvasRef}
-              width={700}
-              height={176}
-              className="w-full h-full block"
-            />
+            <canvas ref={canvasRef} width={700} height={176} className="w-full h-full block" />
 
             {!isActive && (
               <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
@@ -317,8 +307,8 @@ export const Visualizers: React.FC<VisualizersProps> = ({
                   {pitch.frequency < 165
                     ? 'Chest / Baritone'
                     : pitch.frequency < 260
-                    ? 'Mid / Tenor'
-                    : 'High / Treble'}
+                      ? 'Mid / Tenor'
+                      : 'High / Treble'}
                 </div>
               </div>
             ) : (

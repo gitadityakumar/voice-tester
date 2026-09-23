@@ -26,7 +26,10 @@ export const MobileNav: React.FC<MobileNavProps> = ({
     <>
       {/* 1. Mobile Breadcrumb Trail (Visible below header on mobile) */}
       <div className="sm:hidden w-full border-b border-neutral-200/70 dark:border-neutral-800/70 bg-white/70 dark:bg-neutral-950/70 backdrop-blur-md px-4 py-2 flex items-center justify-between text-xs select-none">
-        <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 font-medium text-neutral-500 dark:text-neutral-400">
+        <nav
+          aria-label="Breadcrumb"
+          className="flex items-center gap-1.5 font-medium text-neutral-500 dark:text-neutral-400"
+        >
           <button
             type="button"
             onClick={() => onNavigate('tester')}
@@ -72,7 +75,9 @@ export const MobileNav: React.FC<MobileNavProps> = ({
             {/* Header of Drawer: Breadcrumb & Close Button */}
             <div className="flex items-center justify-between pb-2 border-b border-neutral-200/60 dark:border-neutral-800/60 text-xs">
               <div className="flex items-center gap-1.5 text-neutral-500 dark:text-neutral-400">
-                <span className="font-semibold text-neutral-800 dark:text-neutral-200">Navigation</span>
+                <span className="font-semibold text-neutral-800 dark:text-neutral-200">
+                  Navigation
+                </span>
                 <span>•</span>
                 <span className="font-mono text-emerald-600 dark:text-emerald-400">
                   {currentRoute === 'tester' ? 'Mic Tester' : 'Benchmark'}
@@ -154,7 +159,11 @@ export const MobileNav: React.FC<MobileNavProps> = ({
                 onClick={onToggleTheme}
                 className="flex items-center gap-2 px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-800 text-xs font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-900 cursor-pointer"
               >
-                {isDark ? <Sun className="h-3.5 w-3.5 text-amber-400" /> : <Moon className="h-3.5 w-3.5 text-neutral-600" />}
+                {isDark ? (
+                  <Sun className="h-3.5 w-3.5 text-amber-400" />
+                ) : (
+                  <Moon className="h-3.5 w-3.5 text-neutral-600" />
+                )}
                 <span>{isDark ? 'Light Theme' : 'Dark Theme'}</span>
               </button>
 
@@ -191,7 +200,9 @@ export const MobileNav: React.FC<MobileNavProps> = ({
               : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 font-medium'
           }`}
         >
-          <div className={`p-1 rounded-lg transition-transform ${currentRoute === 'tester' ? 'bg-emerald-500/15 scale-110' : ''}`}>
+          <div
+            className={`p-1 rounded-lg transition-transform ${currentRoute === 'tester' ? 'bg-emerald-500/15 scale-110' : ''}`}
+          >
             <Mic className="h-4 w-4" />
           </div>
           <span className="text-[10px]">Mic Tester</span>
@@ -207,7 +218,9 @@ export const MobileNav: React.FC<MobileNavProps> = ({
               : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 font-medium'
           }`}
         >
-          <div className={`p-1 rounded-lg transition-transform ${currentRoute === 'benchmark' ? 'bg-emerald-500/15 scale-110' : ''}`}>
+          <div
+            className={`p-1 rounded-lg transition-transform ${currentRoute === 'benchmark' ? 'bg-emerald-500/15 scale-110' : ''}`}
+          >
             <Gauge className="h-4 w-4" />
           </div>
           <span className="text-[10px]">Benchmark</span>
@@ -228,5 +241,3 @@ export const MobileNav: React.FC<MobileNavProps> = ({
     </>
   );
 };
-
-export default MobileNav;

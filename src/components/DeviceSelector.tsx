@@ -6,15 +6,7 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { CustomSelect, SelectOption } from './ui/custom-select';
 import { MicConstraints } from '@/audio/types';
-import {
-  Mic,
-  Sliders,
-  Volume2,
-  VolumeX,
-  RefreshCw,
-  Headphones,
-  AlertCircle,
-} from 'lucide-react';
+import { Mic, Sliders, Volume2, VolumeX, RefreshCw, Headphones, AlertCircle } from 'lucide-react';
 
 interface DeviceSelectorProps {
   devices: MediaDeviceInfo[];
@@ -176,8 +168,12 @@ export const DeviceSelector: React.FC<DeviceSelectorProps> = ({
           {/* Echo Cancellation */}
           <div className="flex items-center justify-between p-2.5 rounded-xl border border-neutral-200/70 dark:border-neutral-800/70 bg-neutral-50/50 dark:bg-neutral-900/40">
             <div>
-              <div className="text-xs font-semibold text-neutral-800 dark:text-neutral-200">Echo Cancel</div>
-              <div className="text-[10px] text-neutral-500 dark:text-neutral-400">Acoustic echo filter</div>
+              <div className="text-xs font-semibold text-neutral-800 dark:text-neutral-200">
+                Echo Cancel
+              </div>
+              <div className="text-[10px] text-neutral-500 dark:text-neutral-400">
+                Acoustic echo filter
+              </div>
             </div>
             <Switch
               aria-label="Toggle acoustic echo cancellation"
@@ -189,8 +185,12 @@ export const DeviceSelector: React.FC<DeviceSelectorProps> = ({
           {/* Noise Suppression */}
           <div className="flex items-center justify-between p-2.5 rounded-xl border border-neutral-200/70 dark:border-neutral-800/70 bg-neutral-50/50 dark:bg-neutral-900/40">
             <div>
-              <div className="text-xs font-semibold text-neutral-800 dark:text-neutral-200">Noise Suppress</div>
-              <div className="text-[10px] text-neutral-500 dark:text-neutral-400">Reduce room hum</div>
+              <div className="text-xs font-semibold text-neutral-800 dark:text-neutral-200">
+                Noise Suppress
+              </div>
+              <div className="text-[10px] text-neutral-500 dark:text-neutral-400">
+                Reduce room hum
+              </div>
             </div>
             <Switch
               aria-label="Toggle background noise suppression"
@@ -202,8 +202,12 @@ export const DeviceSelector: React.FC<DeviceSelectorProps> = ({
           {/* Auto Gain Control */}
           <div className="flex items-center justify-between p-2.5 rounded-xl border border-neutral-200/70 dark:border-neutral-800/70 bg-neutral-50/50 dark:bg-neutral-900/40">
             <div>
-              <div className="text-xs font-semibold text-neutral-800 dark:text-neutral-200">Auto Gain</div>
-              <div className="text-[10px] text-neutral-500 dark:text-neutral-400">Dynamic leveling</div>
+              <div className="text-xs font-semibold text-neutral-800 dark:text-neutral-200">
+                Auto Gain
+              </div>
+              <div className="text-[10px] text-neutral-500 dark:text-neutral-400">
+                Dynamic leveling
+              </div>
             </div>
             <Switch
               aria-label="Toggle dynamic auto gain control"
@@ -215,12 +219,18 @@ export const DeviceSelector: React.FC<DeviceSelectorProps> = ({
           {/* Channels (Mono / Stereo) */}
           <div className="flex items-center justify-between p-2.5 rounded-xl border border-neutral-200/70 dark:border-neutral-800/70 bg-neutral-50/50 dark:bg-neutral-900/40">
             <div>
-              <div className="text-xs font-semibold text-neutral-800 dark:text-neutral-200">Channels</div>
+              <div className="text-xs font-semibold text-neutral-800 dark:text-neutral-200">
+                Channels
+              </div>
               <div className="text-[10px] text-neutral-500 dark:text-neutral-400">
                 {constraints.channelCount === 1 ? '1ch Mono' : '2ch Stereo'}
               </div>
             </div>
-            <div className="flex rounded-lg bg-neutral-200 dark:bg-neutral-800 p-0.5 text-xs font-medium" role="group" aria-label="Audio Channels">
+            <div
+              className="flex rounded-lg bg-neutral-200 dark:bg-neutral-800 p-0.5 text-xs font-medium"
+              role="group"
+              aria-label="Audio Channels"
+            >
               <button
                 type="button"
                 aria-label="1 Channel Mono"
@@ -299,7 +309,8 @@ export const DeviceSelector: React.FC<DeviceSelectorProps> = ({
             <div className="mt-2.5 flex items-start gap-2 p-2 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-300 text-xs">
               <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
               <span>
-                <strong>Headphone Warning:</strong> Please wear headphones while Direct Monitoring is active to prevent high-pitched acoustic feedback loops through your speakers.
+                <strong>Headphone Warning:</strong> Please wear headphones while Direct Monitoring
+                is active to prevent high-pitched acoustic feedback loops through your speakers.
               </span>
             </div>
           )}

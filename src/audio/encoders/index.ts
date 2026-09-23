@@ -4,7 +4,7 @@ import { audioBufferToWav } from './wavEncoder';
 export async function exportAudio(
   audioBuffer: AudioBuffer,
   format: AudioFormat,
-  bitrateKbps = 192
+  bitrateKbps = 192,
 ): Promise<ExportedAudio> {
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
   let blob: Blob;

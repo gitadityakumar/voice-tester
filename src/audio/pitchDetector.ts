@@ -2,10 +2,7 @@ import { PitchInfo } from './types';
 
 const NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
-export function detectPitch(
-  buffer: Float32Array,
-  sampleRate: number
-): PitchInfo | null {
+export function detectPitch(buffer: Float32Array, sampleRate: number): PitchInfo | null {
   const bufferSize = buffer.length;
 
   // 1. Check signal level (RMS)

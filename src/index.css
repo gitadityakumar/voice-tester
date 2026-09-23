@@ -91,20 +91,44 @@ html:active-view-transition-type(backward)::view-transition-new(root) {
 }
 
 @keyframes vt-slide-to-left {
-  from { transform: translateX(0); opacity: 1; }
-  to { transform: translateX(-24px); opacity: 0; }
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-24px);
+    opacity: 0;
+  }
 }
 @keyframes vt-slide-from-right {
-  from { transform: translateX(24px); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
+  from {
+    transform: translateX(24px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 @keyframes vt-slide-to-right {
-  from { transform: translateX(0); opacity: 1; }
-  to { transform: translateX(24px); opacity: 0; }
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(24px);
+    opacity: 0;
+  }
 }
 @keyframes vt-slide-from-left {
-  from { transform: translateX(-24px); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
+  from {
+    transform: translateX(-24px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,9 +1,6 @@
 import { MicQualityReport } from './types';
 
-export function analyzeMicQuality(
-  samples: Float32Array,
-  sampleRate: number
-): MicQualityReport {
+export function analyzeMicQuality(samples: Float32Array, sampleRate: number): MicQualityReport {
   const length = samples.length;
   if (length === 0) {
     return {
@@ -42,8 +39,7 @@ export function analyzeMicQuality(
   const p15Index = Math.floor(windowRmsList.length * 0.15);
   const noiseFloorRms = windowRmsList[p15Index] || 0.0001;
 
-  const toDb = (val: number) =>
-    val > 0.000001 ? Math.max(-100, 20 * Math.log10(val)) : -100;
+  const toDb = (val: number) => (val > 0.000001 ? Math.max(-100, 20 * Math.log10(val)) : -100);
 
   const noiseFloorDb = Math.round(toDb(noiseFloorRms) * 10) / 10;
   const peakDb = Math.round(toDb(peakAmplitude) * 10) / 10;
@@ -59,7 +55,7 @@ export function analyzeMicQuality(
     score -= 35;
     issues.push(`Clipping detected (${clippingCount} clipped samples)`);
     recommendations.push(
-      'Lower your microphone input gain in system settings or back away slightly to avoid digital distortion.'
+      'Lower your microphone input gain in system settings or back away slightly to avoid digital distortion.',
     );
   }
 
@@ -68,7 +64,7 @@ export function analyzeMicQuality(
     score -= 25;
     issues.push(`Signal is too quiet (Peak: ${peakDb} dBFS)`);
     recommendations.push(
-      'Increase microphone input volume in OS settings or speak closer to the microphone (around 4-6 inches).'
+      'Increase microphone input volume in OS settings or speak closer to the microphone (around 4-6 inches).',
     );
   }
 
@@ -77,14 +73,12 @@ export function analyzeMicQuality(
     score -= 30;
     issues.push(`High background noise floor (${noiseFloorDb} dBFS)`);
     recommendations.push(
-      'Enable browser Noise Suppression in the settings panel or isolate yourself from room fans, AC, or PC noise.'
+      'Enable browser Noise Suppression in the settings panel or isolate yourself from room fans, AC, or PC noise.',
     );
   } else if (noiseFloorDb > -45) {
     score -= 10;
     issues.push(`Moderate ambient noise (${noiseFloorDb} dBFS)`);
-    recommendations.push(
-      'Consider enabling Noise Suppression toggle if in a lively room.'
-    );
+    recommendations.push('Consider enabling Noise Suppression toggle if in a lively room.');
   }
 
   // 4. Check dynamic range
@@ -92,7 +86,7 @@ export function analyzeMicQuality(
     score -= 15;
     issues.push('Low dynamic range (compressed or flat signal)');
     recommendations.push(
-      'Turn off automatic gain control (AGC) if you want natural vocal dynamics.'
+      'Turn off automatic gain control (AGC) if you want natural vocal dynamics.',
     );
   }
 

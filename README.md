@@ -87,6 +87,7 @@ This compiles optimized, type-checked static files into the `dist/` directory.
 This application is 100% static, making it natively compatible with Cloudflare Pages and the Cloudflare ecosystem:
 
 ### Option 1: Git Integration (Zero-Config)
+
 1. Push this repository to GitHub or GitLab.
 2. In the Cloudflare Dashboard, go to **Workers & Pages** > **Create application** > **Pages** > **Connect to Git**.
 3. Set build configuration:
@@ -108,6 +109,7 @@ npx wrangler pages deploy dist --project-name=online-voice-tester
 ### Security & Privacy Headers
 
 The included `public/_headers` file applies security headers on Cloudflare Pages:
+
 - `Permissions-Policy: microphone=(self), camera=(), geolocation=()` (Restricts microphone access strictly to your own origin)
 - `Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; media-src 'self' blob:; worker-src 'self' blob:; connect-src 'self'` (Prevents audio exfiltration)
 
@@ -115,12 +117,12 @@ The included `public/_headers` file applies security headers on Cloudflare Pages
 
 ## Privacy Architecture Summary
 
-| Step | Location | Mechanism |
-|---|---|---|
-| Microphone Capture | Local Device | `navigator.mediaDevices.getUserMedia` |
-| Real-Time Visualization | Local Device | `AudioContext` & `AnalyserNode` |
-| Pitch & Level Detection | Local Device | Autocorrelation in Web Audio |
-| Recording Storage | Client Memory | In-memory `Float32Array` buffers |
-| MP3 / M4A / WAV Encoding | Client CPU | Client-side JS / WebCodecs |
-| Download | Local Filesystem | Browser `URL.createObjectURL(blob)` |
-| Server Transmission | **None** | **0 bytes sent** |
+| Step                     | Location         | Mechanism                             |
+| ------------------------ | ---------------- | ------------------------------------- |
+| Microphone Capture       | Local Device     | `navigator.mediaDevices.getUserMedia` |
+| Real-Time Visualization  | Local Device     | `AudioContext` & `AnalyserNode`       |
+| Pitch & Level Detection  | Local Device     | Autocorrelation in Web Audio          |
+| Recording Storage        | Client Memory    | In-memory `Float32Array` buffers      |
+| MP3 / M4A / WAV Encoding | Client CPU       | Client-side JS / WebCodecs            |
+| Download                 | Local Filesystem | Browser `URL.createObjectURL(blob)`   |
+| Server Transmission      | **None**         | **0 bytes sent**                      |

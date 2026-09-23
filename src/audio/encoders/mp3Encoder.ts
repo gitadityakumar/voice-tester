@@ -4,10 +4,7 @@ import { Mp3Encoder } from '@breezystack/lamejs';
  * 100% offline, on-device MP3 encoder.
  * Encodes an AudioBuffer to an audio/mp3 Blob in the browser.
  */
-export async function audioBufferToMp3(
-  audioBuffer: AudioBuffer,
-  kbps = 192
-): Promise<Blob> {
+export async function audioBufferToMp3(audioBuffer: AudioBuffer, kbps = 192): Promise<Blob> {
   const channels = audioBuffer.numberOfChannels;
   const sampleRate = audioBuffer.sampleRate;
   const numSamples = audioBuffer.length;
@@ -26,8 +23,7 @@ export async function audioBufferToMp3(
   }
 
   const leftPcm = floatToInt16(audioBuffer.getChannelData(0));
-  const rightPcm =
-    channels > 1 ? floatToInt16(audioBuffer.getChannelData(1)) : undefined;
+  const rightPcm = channels > 1 ? floatToInt16(audioBuffer.getChannelData(1)) : undefined;
 
   // LAME processes audio in chunks of 1152 samples
   const chunkSize = 1152;

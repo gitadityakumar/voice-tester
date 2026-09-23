@@ -4,14 +4,7 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { MicQualityReport, AudioStats } from '@/audio/types';
 import { analyzeMicQuality } from '@/audio/qualityAnalyzer';
-import {
-  Gauge,
-  CheckCircle,
-  Sparkles,
-  ArrowLeft,
-  Mic,
-  Activity,
-} from 'lucide-react';
+import { Gauge, CheckCircle, Sparkles, ArrowLeft, Mic, Activity } from 'lucide-react';
 
 interface BenchmarkPageProps {
   isActive: boolean;
@@ -81,13 +74,32 @@ export const BenchmarkPage: React.FC<BenchmarkPageProps> = ({
   const getScoreBadge = (rating: MicQualityReport['rating']) => {
     switch (rating) {
       case 'Excellent':
-        return <Badge variant="default" className="text-xs">Studio Grade</Badge>;
+        return (
+          <Badge variant="default" className="text-xs">
+            Studio Grade
+          </Badge>
+        );
       case 'Good':
-        return <Badge variant="default" className="text-xs bg-emerald-500/10 text-emerald-600 border-emerald-500/20">Good Quality</Badge>;
+        return (
+          <Badge
+            variant="default"
+            className="text-xs bg-emerald-500/10 text-emerald-600 border-emerald-500/20"
+          >
+            Good Quality
+          </Badge>
+        );
       case 'Fair':
-        return <Badge variant="warning" className="text-xs">Fair Quality</Badge>;
+        return (
+          <Badge variant="warning" className="text-xs">
+            Fair Quality
+          </Badge>
+        );
       case 'Poor':
-        return <Badge variant="destructive" className="text-xs">Needs Calibration</Badge>;
+        return (
+          <Badge variant="destructive" className="text-xs">
+            Needs Calibration
+          </Badge>
+        );
     }
   };
 
@@ -128,9 +140,12 @@ export const BenchmarkPage: React.FC<BenchmarkPageProps> = ({
                 <Gauge className="h-5 w-5" />
               </div>
               <div>
-                <CardTitle className="text-lg font-bold">Microphone Health & Quality Benchmark</CardTitle>
+                <CardTitle className="text-lg font-bold">
+                  Microphone Health & Quality Benchmark
+                </CardTitle>
                 <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
-                  Automated 5-second acoustic analysis: noise floor, vocal headroom, SNR, and distortion
+                  Automated 5-second acoustic analysis: noise floor, vocal headroom, SNR, and
+                  distortion
                 </p>
               </div>
             </div>
@@ -148,7 +163,8 @@ export const BenchmarkPage: React.FC<BenchmarkPageProps> = ({
                 Run 5-Second Guided Diagnostic
               </h4>
               <p className="text-xs text-neutral-500 dark:text-neutral-400 max-w-xl">
-                Phase 1 measures room silence (air conditioning, computer fans, ambient hum). Phase 2 measures vocal volume and distortion.
+                Phase 1 measures room silence (air conditioning, computer fans, ambient hum). Phase
+                2 measures vocal volume and distortion.
               </p>
             </div>
 
@@ -216,7 +232,9 @@ export const BenchmarkPage: React.FC<BenchmarkPageProps> = ({
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                 {/* Score */}
                 <div className="p-4 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-center shadow-xs">
-                  <div className="text-xs uppercase font-bold text-neutral-400 mb-1">Acoustic Score</div>
+                  <div className="text-xs uppercase font-bold text-neutral-400 mb-1">
+                    Acoustic Score
+                  </div>
                   <div className="text-3xl font-black text-neutral-900 dark:text-neutral-100 font-mono">
                     {report.score}
                     <span className="text-sm font-normal text-neutral-400">/100</span>
@@ -228,7 +246,9 @@ export const BenchmarkPage: React.FC<BenchmarkPageProps> = ({
 
                 {/* Noise Floor */}
                 <div className="p-4 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-center shadow-xs">
-                  <div className="text-xs uppercase font-bold text-neutral-400 mb-1">Noise Floor</div>
+                  <div className="text-xs uppercase font-bold text-neutral-400 mb-1">
+                    Noise Floor
+                  </div>
                   <div className="text-2xl font-bold font-mono text-neutral-800 dark:text-neutral-200">
                     {report.noiseFloorDb} <span className="text-xs font-normal">dBFS</span>
                   </div>
@@ -236,14 +256,16 @@ export const BenchmarkPage: React.FC<BenchmarkPageProps> = ({
                     {report.noiseFloorDb < -55
                       ? 'Ultra quiet (Studio)'
                       : report.noiseFloorDb < -45
-                      ? 'Good room silence'
-                      : 'Ambient hum detected'}
+                        ? 'Good room silence'
+                        : 'Ambient hum detected'}
                   </div>
                 </div>
 
                 {/* Peak Speech */}
                 <div className="p-4 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-center shadow-xs">
-                  <div className="text-xs uppercase font-bold text-neutral-400 mb-1">Peak Speech</div>
+                  <div className="text-xs uppercase font-bold text-neutral-400 mb-1">
+                    Peak Speech
+                  </div>
                   <div className="text-2xl font-bold font-mono text-neutral-800 dark:text-neutral-200">
                     {report.peakDb} <span className="text-xs font-normal">dBFS</span>
                   </div>
@@ -251,20 +273,20 @@ export const BenchmarkPage: React.FC<BenchmarkPageProps> = ({
                     {report.peakDb > -1
                       ? 'Clipping / Overload'
                       : report.peakDb > -16
-                      ? 'Optimal broadcast level'
-                      : 'Too quiet'}
+                        ? 'Optimal broadcast level'
+                        : 'Too quiet'}
                   </div>
                 </div>
 
                 {/* SNR */}
                 <div className="p-4 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-center shadow-xs">
-                  <div className="text-xs uppercase font-bold text-neutral-400 mb-1">Signal-to-Noise</div>
+                  <div className="text-xs uppercase font-bold text-neutral-400 mb-1">
+                    Signal-to-Noise
+                  </div>
                   <div className="text-2xl font-bold font-mono text-neutral-800 dark:text-neutral-200">
                     {report.snrDb} <span className="text-xs font-normal">dB</span>
                   </div>
-                  <div className="text-xs text-neutral-400 mt-1">
-                    Dynamic range headroom
-                  </div>
+                  <div className="text-xs text-neutral-400 mt-1">Dynamic range headroom</div>
                 </div>
               </div>
 

@@ -1,25 +1,34 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="light dark" />
-    <meta name="description" content="100% offline, on-device voice and microphone tester. Test mic hardware, inspect latency, visual waveforms, check background noise, and export in MP3, M4A, WAV without sending a single byte to any server." />
+    <meta
+      name="description"
+      content="100% offline, on-device voice and microphone tester. Test mic hardware, inspect latency, visual waveforms, check background noise, and export in MP3, M4A, WAV without sending a single byte to any server."
+    />
     <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="canonical" href="https://voicetester.app/" />
     <meta property="og:title" content="VoiceTester — 100% Offline On-Device Mic Tester" />
-    <meta property="og:description" content="100% offline, on-device voice and microphone tester. Test mic hardware, inspect latency, visual waveforms, check background noise, and export in MP3, M4A, WAV without sending a single byte to any server." />
+    <meta
+      property="og:description"
+      content="100% offline, on-device voice and microphone tester. Test mic hardware, inspect latency, visual waveforms, check background noise, and export in MP3, M4A, WAV without sending a single byte to any server."
+    />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="VoiceTester — 100% Offline On-Device Mic Tester" />
-    <meta name="twitter:description" content="100% offline, on-device voice and microphone tester. Test mic hardware, inspect latency, visual waveforms, check background noise, and export in MP3, M4A, WAV without sending a single byte to any server." />
+    <meta
+      name="twitter:description"
+      content="100% offline, on-device voice and microphone tester. Test mic hardware, inspect latency, visual waveforms, check background noise, and export in MP3, M4A, WAV without sending a single byte to any server."
+    />
     <link rel="manifest" href="/manifest.webmanifest" />
     <title>VoiceTester — 100% Offline On-Device Mic Tester</title>
     <!-- Prevent theme flashing (FOUC) adhering to modern web guidance -->
     <script>
-      (function() {
+      (function () {
         try {
           const stored = localStorage.getItem('theme');
           const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -32,7 +41,9 @@
       })();
     </script>
   </head>
-  <body class="bg-neutral-50 text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100 min-h-screen antialiased selection:bg-emerald-500/20 selection:text-emerald-500 transition-colors duration-200">
+  <body
+    class="bg-neutral-50 text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100 min-h-screen antialiased selection:bg-emerald-500/20 selection:text-emerald-500 transition-colors duration-200"
+  >
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     <script>

@@ -6,21 +6,22 @@ import { FeaturesSection } from './components/FeaturesSection';
 import { MobileNav } from './components/MobileNav';
 
 const Recorder = React.lazy(() =>
-  import('./components/Recorder').then((m) => ({ default: m.Recorder }))
+  import('./components/Recorder').then((m) => ({ default: m.Recorder })),
 );
 
 const BenchmarkPage = React.lazy(() =>
-  import('./components/BenchmarkPage').then((m) => ({ default: m.BenchmarkPage }))
+  import('./components/BenchmarkPage').then((m) => ({ default: m.BenchmarkPage })),
 );
 
 const PrivacyModal = React.lazy(() =>
-  import('./components/PrivacyModal').then((m) => ({ default: m.PrivacyModal }))
+  import('./components/PrivacyModal').then((m) => ({ default: m.PrivacyModal })),
 );
 import { audioManager } from './audio/audioManager';
 import { AudioStats, MicConstraints, PitchInfo } from './audio/types';
 import { ShieldCheck, AlertCircle, Lock } from 'lucide-react';
+import { applyTheme, getInitialTheme } from '@/lib/theme';
 
-export const App: React.FC = () => {
+const App: React.FC = () => {
   // Routing state
   const getInitialRoute = (): 'tester' | 'benchmark' => {
     if (typeof window === 'undefined') return 'tester';
@@ -35,68 +36,56 @@ export const App: React.FC = () => {
   const [currentRoute, setCurrentRoute] = useState<'tester' | 'benchmark'>(getInitialRoute);
   const [navDirection, setNavDirection] = useState<'forward' | 'backward'>('forward');
 
-  const navigateTo = (route: 'tester' | 'benchmark') => {
-    if (route === currentRoute) return;
-    const direction = route === 'benchmark' ? 'forward' : 'backward';
-    setNavDirection(direction);
-
-    const updateDOM = () => {
-      setCurrentRoute(route);
-      const targetUrl = route === 'benchmark' ? '/benchmark' : '/';
-      try {
-        window.history.pushState({}, '', targetUrl);
-      } catch (_) {
-        // Fallback for file:// or restricted protocols
-        window.location.hash = route === 'benchmark' ? '#benchmark' : '#/';
-      }
-    };
-
-    if (typeof document !== 'undefined' && 'startViewTransition' in document) {
-      const doc = document as unknown as {
-        startViewTransition?: (args: (() => void) | { update: () => void; types?: string[] }) => void;
-      };
-      try {
-        doc.startViewTransition?.({
-          update: updateDOM,
-          types: [direction],
-        });
-      } catch (_) {
-        doc.startViewTransition?.(updateDOM);
-      }
-    } else {
-      updateDOM();
-    }
-  };
-
-  useEffect(() => {
-    const handlePopState = () => {
-      const path = window.location.pathname;
-      const hash = window.location.hash;
-      const nextRoute = path.includes('benchmark') || hash.includes('benchmark') ? 'benchmark' : 'tester';
+  const transitionToRoute = useCallback(
+    (nextRoute: 'tester' | 'benchmark', updateHistory = false) => {
       if (nextRoute === currentRoute) return;
-
       const direction = nextRoute === 'benchmark' ? 'forward' : 'backward';
       setNavDirection(direction);
 
       const updateDOM = () => {
         setCurrentRoute(nextRoute);
+        if (updateHistory) {
+          const targetUrl = nextRoute === 'benchmark' ? '/benchmark' : '/';
+          try {
+            window.history.pushState({}, '', targetUrl);
+          } catch {
+            window.location.hash = nextRoute === 'benchmark' ? '#benchmark' : '#/';
+          }
+        }
       };
 
       if (typeof document !== 'undefined' && 'startViewTransition' in document) {
         const doc = document as unknown as {
-          startViewTransition?: (args: (() => void) | { update: () => void; types?: string[] }) => void;
+          startViewTransition?: (
+            args: (() => void) | { update: () => void; types?: string[] },
+          ) => void;
         };
         try {
           doc.startViewTransition?.({
             update: updateDOM,
             types: [direction],
           });
-        } catch (_) {
+        } catch {
           doc.startViewTransition?.(updateDOM);
         }
       } else {
         updateDOM();
       }
+    },
+    [currentRoute],
+  );
+
+  const navigateTo = (route: 'tester' | 'benchmark') => {
+    transitionToRoute(route, true);
+  };
+
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname;
+      const hash = window.location.hash;
+      const nextRoute =
+        path.includes('benchmark') || hash.includes('benchmark') ? 'benchmark' : 'tester';
+      transitionToRoute(nextRoute, false);
     };
     window.addEventListener('popstate', handlePopState);
     window.addEventListener('hashchange', handlePopState);
@@ -104,43 +93,28 @@ export const App: React.FC = () => {
       window.removeEventListener('popstate', handlePopState);
       window.removeEventListener('hashchange', handlePopState);
     };
-  }, [currentRoute]);
+  }, [transitionToRoute]);
 
   // Audio & Mic state
   const [isActive, setIsActive] = useState<boolean>(false);
   const [permissionError, setPermissionError] = useState<string | null>(null);
-  const [isInsecureContext, setIsInsecureContext] = useState<boolean>(false);
+  const [isInsecureContext] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    const isLocalhost =
+      window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    return !window.isSecureContext && !isLocalhost;
+  });
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
   const [privacyModalOpen, setPrivacyModalOpen] = useState<boolean>(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
-  const [isDark, setIsDark] = useState<boolean>(() => {
-    if (typeof window === 'undefined') return true;
-    return document.documentElement.classList.contains('dark');
-  });
+  const [isDark, setIsDark] = useState<boolean>(getInitialTheme);
 
   const toggleTheme = () => {
     const nextDark = !isDark;
     setIsDark(nextDark);
-    if (nextDark) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
+    applyTheme(nextDark);
   };
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const isLocalhost =
-        window.location.hostname === 'localhost' ||
-        window.location.hostname === '127.0.0.1';
-      if (!window.isSecureContext && !isLocalhost) {
-        setIsInsecureContext(true);
-      }
-    }
-  }, []);
 
   const [constraints, setConstraints] = useState<MicConstraints>({
     deviceId: '',
@@ -176,7 +150,7 @@ export const App: React.FC = () => {
     try {
       const devList = await audioManager.getDevices();
       setDevices(devList);
-    } catch (_) {}
+    } catch {}
   }, []);
 
   useEffect(() => {
@@ -203,12 +177,16 @@ export const App: React.FC = () => {
         setPermissionError(
           'Microphone blocked: Browsers require a Secure Context (HTTPS or localhost). On mobile Wi-Fi, open via HTTPS (https://' +
             window.location.host +
-            ') or test the deployed production URL.'
+            ') or test the deployed production URL.',
         );
       } else if (e.name === 'NotAllowedError' || e.name === 'PermissionDeniedError') {
-        setPermissionError('Microphone permission was denied. Please allow microphone access in your browser address bar.');
+        setPermissionError(
+          'Microphone permission was denied. Please allow microphone access in your browser address bar.',
+        );
       } else if (e.name === 'NotFoundError') {
-        setPermissionError('No microphone hardware detected. Please plug in a microphone and retry.');
+        setPermissionError(
+          'No microphone hardware detected. Please plug in a microphone and retry.',
+        );
       } else {
         setPermissionError(e.message || 'Could not access microphone.');
       }
@@ -362,7 +340,10 @@ export const App: React.FC = () => {
               <span>Mobile Testing Notice: Microphone Access Requires HTTPS</span>
             </div>
             <p className="text-xs text-amber-800/90 dark:text-amber-300/90 leading-relaxed">
-              Mobile browsers (Chrome, Safari, Firefox, Brave) restrict microphone access (<code className="px-1 py-0.5 rounded bg-amber-500/20 font-mono">getUserMedia</code>) strictly to <strong>Secure Contexts (HTTPS)</strong>. Plain HTTP over local network IPs is blocked for privacy.
+              Mobile browsers (Chrome, Safari, Firefox, Brave) restrict microphone access (
+              <code className="px-1 py-0.5 rounded bg-amber-500/20 font-mono">getUserMedia</code>)
+              strictly to <strong>Secure Contexts (HTTPS)</strong>. Plain HTTP over local network
+              IPs is blocked for privacy.
             </p>
             <div className="flex flex-wrap items-center gap-2 pt-1">
               <button
@@ -493,19 +474,14 @@ export const App: React.FC = () => {
             <ShieldCheck className="h-4 w-4" />
             <span>Zero-Cloud Processing · All audio stays local in browser RAM</span>
           </button>
-          <div>
-            100% Client-Side Static Architecture
-          </div>
+          <div>100% Client-Side Static Architecture</div>
         </div>
       </footer>
 
       {/* Privacy Guarantee Modal */}
       {privacyModalOpen && (
         <React.Suspense fallback={null}>
-          <PrivacyModal
-            open={privacyModalOpen}
-            onOpenChange={setPrivacyModalOpen}
-          />
+          <PrivacyModal open={privacyModalOpen} onOpenChange={setPrivacyModalOpen} />
         </React.Suspense>
       )}
     </div>

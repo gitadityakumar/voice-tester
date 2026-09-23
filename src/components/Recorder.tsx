@@ -151,7 +151,7 @@ export const Recorder: React.FC<RecorderProps> = ({
       try {
         sourceNodeRef.current.stop();
         sourceNodeRef.current.disconnect();
-      } catch (_) {}
+      } catch {}
       sourceNodeRef.current = null;
     }
     if (animFrameRef.current) {
@@ -320,10 +320,7 @@ export const Recorder: React.FC<RecorderProps> = ({
       // Resize end
       const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
       const timeAtPointer = ratio * totalDuration;
-      const newEnd = Math.min(
-        totalDuration,
-        Math.max(trimStart + minClipDuration, timeAtPointer)
-      );
+      const newEnd = Math.min(totalDuration, Math.max(trimStart + minClipDuration, timeAtPointer));
       setTrimEnd(newEnd);
       setIsTrimModified(true);
       if (playbackTime > newEnd) {
@@ -339,7 +336,7 @@ export const Recorder: React.FC<RecorderProps> = ({
     if (draggingHandle) {
       try {
         (e.target as HTMLElement).releasePointerCapture(e.pointerId);
-      } catch (_) {}
+      } catch {}
 
       // If user tapped/clicked inside window without dragging, seek playhead
       if (
@@ -352,7 +349,7 @@ export const Recorder: React.FC<RecorderProps> = ({
         const clickRatio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
         const targetTime = Math.max(
           trimStart,
-          Math.min(trimEnd, clickRatio * currentBuffer.duration)
+          Math.min(trimEnd, clickRatio * currentBuffer.duration),
         );
         pauseOffsetRef.current = targetTime;
         setPlaybackTime(targetTime);
@@ -438,12 +435,15 @@ export const Recorder: React.FC<RecorderProps> = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <FileAudio className="h-5 w-5 text-emerald-500" />
-            <CardTitle className="text-base font-semibold">Test Recording & Multi-Format Exporter</CardTitle>
+            <CardTitle className="text-base font-semibold">
+              Test Recording & Multi-Format Exporter
+            </CardTitle>
           </div>
           {currentBuffer && (
             <div className="flex items-center gap-2">
               <Badge variant="outline" className="text-xs font-mono">
-                {currentBuffer.duration.toFixed(2)}s · {currentBuffer.sampleRate} Hz · {currentBuffer.numberOfChannels === 1 ? 'Mono' : 'Stereo'}
+                {currentBuffer.duration.toFixed(2)}s · {currentBuffer.sampleRate} Hz ·{' '}
+                {currentBuffer.numberOfChannels === 1 ? 'Mono' : 'Stereo'}
               </Badge>
             </div>
           )}
@@ -458,8 +458,8 @@ export const Recorder: React.FC<RecorderProps> = ({
             {isRecording
               ? 'Recording raw lossless PCM directly in browser memory...'
               : currentBuffer
-              ? 'Audio captured! Drag handles to resize, or drag center to slide window over clip.'
-              : 'Click "Record" and speak naturally to test microphone and record clips.'}
+                ? 'Audio captured! Drag handles to resize, or drag center to slide window over clip.'
+                : 'Click "Record" and speak naturally to test microphone and record clips.'}
           </div>
 
           {/* Record Button & Timer: Center on mobile/tablet (order-2), Right side on desktop (lg:order-2) */}
@@ -504,9 +504,7 @@ export const Recorder: React.FC<RecorderProps> = ({
                 <span className="font-semibold text-emerald-600 dark:text-emerald-400">
                   {formatTime(trimStart)} - {formatTime(trimEnd)}
                 </span>
-                <span className="text-neutral-400">
-                  ({selectedDuration.toFixed(2)}s selected)
-                </span>
+                <span className="text-neutral-400">({selectedDuration.toFixed(2)}s selected)</span>
               </div>
 
               <div className="flex items-center gap-2">
@@ -735,10 +733,10 @@ export const Recorder: React.FC<RecorderProps> = ({
                     {fmt === 'mp3'
                       ? 'LAME 192k'
                       : fmt === 'm4a'
-                      ? 'AAC-LC'
-                      : fmt === 'wav'
-                      ? '16-bit Lossless'
-                      : 'Opus WebM'}
+                        ? 'AAC-LC'
+                        : fmt === 'wav'
+                          ? '16-bit Lossless'
+                          : 'Opus WebM'}
                   </span>
                 </button>
               ))}
@@ -783,12 +781,7 @@ export const Recorder: React.FC<RecorderProps> = ({
               </div>
 
               <div className="flex gap-2 w-full sm:w-auto">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={onClearRecording}
-                  className="text-xs"
-                >
+                <Button variant="outline" size="sm" onClick={onClearRecording} className="text-xs">
                   Clear
                 </Button>
 

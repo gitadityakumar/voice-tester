@@ -1,12 +1,13 @@
-import React, { useState } from "react";
-import { Mic, Moon, Sun, WifiOff, Gauge, MoreHorizontal, X } from "lucide-react";
-import { Button } from "./ui/button";
-import { Badge } from "./ui/badge";
-import { LiveMicIcon } from "./LiveMicIcon";
+import React, { useState } from 'react';
+import { Mic, Moon, Sun, WifiOff, Gauge, MoreHorizontal, X } from 'lucide-react';
+import { Button } from './ui/button';
+import { Badge } from './ui/badge';
+import { LiveMicIcon } from './LiveMicIcon';
+import { applyTheme } from '@/lib/theme';
 
 interface HeaderProps {
-  currentRoute: "tester" | "benchmark";
-  onNavigate: (route: "tester" | "benchmark") => void;
+  currentRoute: 'tester' | 'benchmark';
+  onNavigate: (route: 'tester' | 'benchmark') => void;
   onOpenPrivacyModal?: () => void;
   isActive?: boolean;
   mobileMenuOpen?: boolean;
@@ -25,8 +26,8 @@ export const Header: React.FC<HeaderProps> = ({
   onToggleTheme: externalToggleTheme,
 }) => {
   const [internalIsDark, setInternalIsDark] = useState<boolean>(() => {
-    if (typeof window === "undefined") return true;
-    return document.documentElement.classList.contains("dark");
+    if (typeof window === 'undefined') return true;
+    return document.documentElement.classList.contains('dark');
   });
 
   const isDark = externalIsDark !== undefined ? externalIsDark : internalIsDark;
@@ -38,13 +39,7 @@ export const Header: React.FC<HeaderProps> = ({
     }
     const nextDark = !internalIsDark;
     setInternalIsDark(nextDark);
-    if (nextDark) {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-    }
+    applyTheme(nextDark);
   };
 
   return (
@@ -52,7 +47,7 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="mx-auto flex max-w-6xl items-center justify-between px-3 sm:px-6 py-2 sm:py-3 gap-1.5 sm:gap-3">
         {/* Brand with Animated LiveMicIcon (Mobile: Only icon + VoiceTester text) */}
         <div
-          onClick={() => onNavigate("tester")}
+          onClick={() => onNavigate('tester')}
           className="flex items-center gap-2 cursor-pointer select-none group shrink-0 min-w-0"
         >
           <div className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-emerald-500/10 text-neutral-900 dark:text-white dark:bg-emerald-500/15 ring-1 ring-emerald-500/20 shadow-sm group-hover:scale-105 transition-transform overflow-visible p-0.5">
@@ -86,30 +81,32 @@ export const Header: React.FC<HeaderProps> = ({
         <nav className="hidden sm:flex items-center gap-1 sm:gap-6">
           <button
             type="button"
-            onClick={() => onNavigate("tester")}
-            className={`relative py-1.5 px-2 sm:px-1 text-xs sm:text-sm font-medium transition-colors flex items-center gap-1.5 cursor-pointer ${currentRoute === "tester"
-                ? "text-emerald-600 dark:text-emerald-400 font-semibold"
-                : "text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100"
-              }`}
+            onClick={() => onNavigate('tester')}
+            className={`relative py-1.5 px-2 sm:px-1 text-xs sm:text-sm font-medium transition-colors flex items-center gap-1.5 cursor-pointer ${
+              currentRoute === 'tester'
+                ? 'text-emerald-600 dark:text-emerald-400 font-semibold'
+                : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100'
+            }`}
           >
             <Mic className="h-3.5 w-3.5" />
             <span>Mic Tester</span>
-            {currentRoute === "tester" && (
+            {currentRoute === 'tester' && (
               <span className="absolute -bottom-1 left-0 right-0 h-0.5 bg-emerald-500 rounded-full" />
             )}
           </button>
 
           <button
             type="button"
-            onClick={() => onNavigate("benchmark")}
-            className={`relative py-1.5 px-2 sm:px-1 text-xs sm:text-sm font-medium transition-colors flex items-center gap-1.5 cursor-pointer ${currentRoute === "benchmark"
-                ? "text-emerald-600 dark:text-emerald-400 font-semibold"
-                : "text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100"
-              }`}
+            onClick={() => onNavigate('benchmark')}
+            className={`relative py-1.5 px-2 sm:px-1 text-xs sm:text-sm font-medium transition-colors flex items-center gap-1.5 cursor-pointer ${
+              currentRoute === 'benchmark'
+                ? 'text-emerald-600 dark:text-emerald-400 font-semibold'
+                : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100'
+            }`}
           >
             <Gauge className="h-3.5 w-3.5" />
             <span>Benchmark</span>
-            {currentRoute === "benchmark" && (
+            {currentRoute === 'benchmark' && (
               <span className="absolute -bottom-1 left-0 right-0 h-0.5 bg-emerald-500 rounded-full" />
             )}
           </button>
@@ -134,11 +131,7 @@ export const Header: React.FC<HeaderProps> = ({
             aria-label="Toggle color theme"
             className="rounded-full text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 h-8 w-8 p-0"
           >
-            {isDark ? (
-              <Sun className="h-3.5 w-3.5" />
-            ) : (
-              <Moon className="h-3.5 w-3.5" />
-            )}
+            {isDark ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
           </Button>
         </div>
 

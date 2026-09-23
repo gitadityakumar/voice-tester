@@ -5,7 +5,7 @@
 export function sliceAudioBuffer(
   buffer: AudioBuffer,
   startSec: number,
-  endSec: number
+  endSec: number,
 ): AudioBuffer {
   const sampleRate = buffer.sampleRate;
   const numChannels = buffer.numberOfChannels;

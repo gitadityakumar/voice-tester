@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from './ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from './ui/dialog';
 import { ShieldCheck, HardDrive, WifiOff, FileCheck, Lock, Activity } from 'lucide-react';
 import { networkMonitor } from '@/audio/networkMonitor';
 
@@ -33,11 +27,16 @@ export const PrivacyModal: React.FC<PrivacyModalProps> = ({ open, onOpenChange }
         <DialogHeader>
           <div className="flex items-center gap-2 text-emerald-500 mb-1">
             <ShieldCheck className="h-6 w-6" />
-            <span className="text-xs uppercase font-bold tracking-wider">Privacy & Security Guarantee</span>
+            <span className="text-xs uppercase font-bold tracking-wider">
+              Privacy & Security Guarantee
+            </span>
           </div>
-          <DialogTitle className="text-xl font-bold">100% On-Device & Offline Architecture</DialogTitle>
+          <DialogTitle className="text-xl font-bold">
+            100% On-Device & Offline Architecture
+          </DialogTitle>
           <DialogDescription>
-            This application is architected to guarantee complete privacy. No audio recordings, microphone streams, or voice data ever leave your machine.
+            This application is architected to guarantee complete privacy. No audio recordings,
+            microphone streams, or voice data ever leave your machine.
           </DialogDescription>
         </DialogHeader>
 
@@ -53,7 +52,8 @@ export const PrivacyModal: React.FC<PrivacyModalProps> = ({ open, onOpenChange }
             </span>
           </div>
           <div className="text-xs text-neutral-500 dark:text-neutral-400 mb-2">
-            Active outbound HTTP/XHR/fetch requests intercepted during this session: <strong className="text-neutral-800 dark:text-neutral-200">{stats.requestCount}</strong>
+            Active outbound HTTP/XHR/fetch requests intercepted during this session:{' '}
+            <strong className="text-neutral-800 dark:text-neutral-200">{stats.requestCount}</strong>
           </div>
           {stats.logs.length === 0 ? (
             <div className="rounded-lg bg-emerald-500/10 border border-emerald-500/20 p-2.5 text-center text-xs text-emerald-700 dark:text-emerald-300">
@@ -62,8 +62,13 @@ export const PrivacyModal: React.FC<PrivacyModalProps> = ({ open, onOpenChange }
           ) : (
             <div className="max-h-24 overflow-y-auto font-mono text-[11px] space-y-1 bg-white dark:bg-neutral-950 p-2 rounded border border-neutral-200 dark:border-neutral-800">
               {stats.logs.map((log, i) => (
-                <div key={i} className="flex justify-between text-neutral-600 dark:text-neutral-400">
-                  <span>{log.method} {log.url}</span>
+                <div
+                  key={i}
+                  className="flex justify-between text-neutral-600 dark:text-neutral-400"
+                >
+                  <span>
+                    {log.method} {log.url}
+                  </span>
                   <span>{log.payloadSize} B</span>
                 </div>
               ))}
@@ -79,7 +84,8 @@ export const PrivacyModal: React.FC<PrivacyModalProps> = ({ open, onOpenChange }
               RAM-Only Processing
             </div>
             <p className="text-xs text-neutral-500 dark:text-neutral-400">
-              Your microphone audio is piped strictly into local Web Audio API buffers in browser memory. No backend server exists.
+              Your microphone audio is piped strictly into local Web Audio API buffers in browser
+              memory. No backend server exists.
             </p>
           </div>
 
@@ -89,7 +95,8 @@ export const PrivacyModal: React.FC<PrivacyModalProps> = ({ open, onOpenChange }
               Client-Side Encoders
             </div>
             <p className="text-xs text-neutral-500 dark:text-neutral-400">
-              WAV, MP3, M4A, and WebM files are synthesized on your device's CPU using WebCodecs and pure in-browser encoders.
+              WAV, MP3, M4A, and WebM files are synthesized on your device's CPU using WebCodecs and
+              pure in-browser encoders.
             </p>
           </div>
 
@@ -99,7 +106,8 @@ export const PrivacyModal: React.FC<PrivacyModalProps> = ({ open, onOpenChange }
               100% Offline PWA
             </div>
             <p className="text-xs text-neutral-500 dark:text-neutral-400">
-              Once cached via the Service Worker, you can turn off Wi-Fi or unplug your internet cable and the entire app continues to work.
+              Once cached via the Service Worker, you can turn off Wi-Fi or unplug your internet
+              cable and the entire app continues to work.
             </p>
           </div>
 
@@ -109,7 +117,8 @@ export const PrivacyModal: React.FC<PrivacyModalProps> = ({ open, onOpenChange }
               No Telemetry or Cookies
             </div>
             <p className="text-xs text-neutral-500 dark:text-neutral-400">
-              Zero Google Analytics, zero advertising trackers, zero cookies, zero external API keys. Pure static code.
+              Zero Google Analytics, zero advertising trackers, zero cookies, zero external API
+              keys. Pure static code.
             </p>
           </div>
         </div>

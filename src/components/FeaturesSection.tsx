@@ -72,5 +72,3 @@ export const FeaturesSection: React.FC = () => {
     </section>
   );
 };
-
-export default FeaturesSection;
