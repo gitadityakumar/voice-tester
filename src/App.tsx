@@ -6,6 +6,7 @@ import { Recorder } from './components/Recorder';
 import { BenchmarkPage } from './components/BenchmarkPage';
 import { PrivacyModal } from './components/PrivacyModal';
 import { FeaturesSection } from './components/FeaturesSection';
+import { MobileNav } from './components/MobileNav';
 import { audioManager } from './audio/audioManager';
 import { AudioStats, MicConstraints, PitchInfo } from './audio/types';
 import { ShieldCheck, AlertCircle, Lock } from 'lucide-react';
@@ -102,6 +103,24 @@ export const App: React.FC = () => {
   const [isInsecureContext, setIsInsecureContext] = useState<boolean>(false);
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
   const [privacyModalOpen, setPrivacyModalOpen] = useState<boolean>(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
+
+  const [isDark, setIsDark] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return true;
+    return document.documentElement.classList.contains('dark');
+  });
+
+  const toggleTheme = () => {
+    const nextDark = !isDark;
+    setIsDark(nextDark);
+    if (nextDark) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  };
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -307,9 +326,25 @@ export const App: React.FC = () => {
         onNavigate={navigateTo}
         onOpenPrivacyModal={() => setPrivacyModalOpen(true)}
         isActive={isActive}
+        mobileMenuOpen={mobileMenuOpen}
+        onToggleMobileMenu={() => setMobileMenuOpen(!mobileMenuOpen)}
+        isDark={isDark}
+        onToggleTheme={toggleTheme}
       />
 
-      <main className="flex-1 mx-auto max-w-6xl w-full px-4 py-6 sm:px-6 space-y-6">
+      {/* Dedicated Mobile Navigation & Breadcrumb System */}
+      <MobileNav
+        currentRoute={currentRoute}
+        onNavigate={navigateTo}
+        isDark={isDark}
+        onToggleTheme={toggleTheme}
+        onOpenPrivacyModal={() => setPrivacyModalOpen(true)}
+        isActive={isActive}
+        drawerOpen={mobileMenuOpen}
+        onCloseDrawer={() => setMobileMenuOpen(false)}
+      />
+
+      <main className="flex-1 mx-auto max-w-6xl w-full px-4 py-6 sm:px-6 space-y-6 pb-24 sm:pb-6">
         {/* Insecure Context (Plain HTTP on LAN) Diagnostic Banner */}
         {isInsecureContext && (
           <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-900 dark:text-amber-200 text-sm space-y-2.5 shadow-xs">
@@ -423,7 +458,7 @@ export const App: React.FC = () => {
       </main>
 
       {/* Footer */}
-      <footer className="w-full border-t border-neutral-200/80 dark:border-neutral-800/80 py-6 text-center text-xs text-neutral-500 dark:text-neutral-400">
+      <footer className="w-full border-t border-neutral-200/80 dark:border-neutral-800/80 py-6 mb-16 sm:mb-0 text-center text-xs text-neutral-500 dark:text-neutral-400">
         <div className="mx-auto max-w-6xl px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
           <button
             type="button"

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Mic, Moon, Sun, WifiOff, Award } from "lucide-react";
+import { Mic, Moon, Sun, WifiOff, Award, MoreHorizontal, X } from "lucide-react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { LiveMicIcon } from "./LiveMicIcon";
@@ -9,21 +9,35 @@ interface HeaderProps {
   onNavigate: (route: "tester" | "benchmark") => void;
   onOpenPrivacyModal?: () => void;
   isActive?: boolean;
+  mobileMenuOpen?: boolean;
+  onToggleMobileMenu?: () => void;
+  isDark?: boolean;
+  onToggleTheme?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   currentRoute,
   onNavigate,
   isActive = false,
+  mobileMenuOpen = false,
+  onToggleMobileMenu,
+  isDark: externalIsDark,
+  onToggleTheme: externalToggleTheme,
 }) => {
-  const [isDark, setIsDark] = useState<boolean>(() => {
+  const [internalIsDark, setInternalIsDark] = useState<boolean>(() => {
     if (typeof window === "undefined") return true;
     return document.documentElement.classList.contains("dark");
   });
 
+  const isDark = externalIsDark !== undefined ? externalIsDark : internalIsDark;
+
   const toggleTheme = () => {
-    const nextDark = !isDark;
-    setIsDark(nextDark);
+    if (externalToggleTheme) {
+      externalToggleTheme();
+      return;
+    }
+    const nextDark = !internalIsDark;
+    setInternalIsDark(nextDark);
     if (nextDark) {
       document.documentElement.classList.add("dark");
       localStorage.setItem("theme", "dark");
@@ -36,7 +50,7 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <header className="sticky top-0 z-40 w-full border-b border-neutral-200/80 bg-white/80 backdrop-blur-md dark:border-neutral-800/80 dark:bg-neutral-950/80 overflow-x-clip">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-3 sm:px-6 py-2 sm:py-3 gap-1.5 sm:gap-3">
-        {/* Brand with Animated LiveMicIcon */}
+        {/* Brand with Animated LiveMicIcon (Mobile: Only icon + VoiceTester text) */}
         <div
           onClick={() => onNavigate("tester")}
           className="flex items-center gap-2 cursor-pointer select-none group shrink-0 min-w-0"
@@ -52,8 +66,8 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-1.5">
-              <h1 className="text-xs sm:text-base font-bold tracking-tight text-neutral-900 dark:text-neutral-50 truncate">
-                Voice
+              <h1 className="text-sm sm:text-base font-bold tracking-tight text-neutral-900 dark:text-neutral-50 truncate">
+                VoiceTester
               </h1>
               <Badge
                 variant="outline"
@@ -68,8 +82,8 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         </div>
 
-        {/* Navigation Elements (Semantic Nav Links, Not Action Buttons) */}
-        <nav className="flex items-center gap-1 sm:gap-6">
+        {/* Desktop Navigation Elements (Hidden on mobile) */}
+        <nav className="hidden sm:flex items-center gap-1 sm:gap-6">
           <button
             type="button"
             onClick={() => onNavigate("tester")}
@@ -101,8 +115,8 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
         </nav>
 
-        {/* Right Section: Theme Toggle */}
-        <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+        {/* Desktop Right Section (Hidden on mobile) */}
+        <div className="hidden sm:flex items-center gap-1 sm:gap-2 shrink-0">
           {/* Offline Ready Badge (Desktop) */}
           <div
             className="hidden md:flex items-center gap-1 text-xs text-neutral-500 dark:text-neutral-400"
@@ -127,6 +141,21 @@ export const Header: React.FC<HeaderProps> = ({
             )}
           </Button>
         </div>
+
+        {/* Mobile Right Section: Dedicated Breadcrumb Icon */}
+        <button
+          type="button"
+          onClick={onToggleMobileMenu}
+          aria-label="Navigation Menu"
+          title="Navigation Menu"
+          className="sm:hidden p-2 rounded-xl border border-neutral-200/80 dark:border-neutral-800/80 bg-neutral-100/70 dark:bg-neutral-900/70 text-neutral-600 dark:text-neutral-300 hover:text-emerald-500 hover:border-emerald-500/40 transition-colors cursor-pointer"
+        >
+          {mobileMenuOpen ? (
+            <X className="h-4 w-4 text-emerald-500" />
+          ) : (
+            <MoreHorizontal className="h-4 w-4" />
+          )}
+        </button>
       </div>
     </header>
   );
