@@ -101,37 +101,19 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
       {isOpen && (
         <div className="hidden sm:block absolute top-full left-0 right-0 mt-1.5 z-50 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-xl overflow-hidden py-1 animate-in fade-in zoom-in-95 duration-150 max-h-64 overflow-y-auto">
           {options.length === 0 ? (
-            <div className="p-3 text-xs text-neutral-400 text-center italic">
-              No devices found
-            </div>
+            <div className="p-3 text-xs text-neutral-400 text-center italic">No devices found</div>
           ) : (
-            options.map((opt) => {
-              const isSelected = opt.value === value || (!value && opt === options[0]);
-              return (
-                <button
-                  key={opt.value}
-                  type="button"
-                  onClick={() => {
-                    onChange(opt.value);
-                    setIsOpen(false);
-                  }}
-                  className={`w-full flex items-center justify-between px-3 py-2 text-xs sm:text-sm text-left transition-colors cursor-pointer ${
-                    isSelected
-                      ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-semibold'
-                      : 'text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800/80'
-                  }`}
-                >
-                  <div className="flex items-center gap-2.5 truncate pr-2">
-                    {opt.icon || <Mic className="h-4 w-4 text-emerald-500 shrink-0" />}
-                    <span className="truncate">{opt.label}</span>
-                  </div>
-
-                  {isSelected && (
-                    <Check className="h-4 w-4 text-emerald-500 shrink-0 stroke-[2.5]" />
-                  )}
-                </button>
-              );
-            })
+            options.map((opt) => (
+              <OptionItem
+                key={opt.value}
+                option={opt}
+                isSelected={opt.value === value || (!value && opt === options[0])}
+                onSelect={() => {
+                  onChange(opt.value);
+                  setIsOpen(false);
+                }}
+              />
+            ))
           )}
         </div>
       )}
@@ -182,55 +164,18 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
                   No devices detected. Tap "Start Mic" to grant permission.
                 </div>
               ) : (
-                options.map((opt) => {
-                  const isSelected = opt.value === value || (!value && opt === options[0]);
-                  return (
-                    <button
-                      key={opt.value}
-                      type="button"
-                      onClick={() => {
-                        onChange(opt.value);
-                        setIsOpen(false);
-                      }}
-                      className={`w-full flex items-center justify-between p-3 rounded-2xl border text-left transition-all cursor-pointer ${
-                        isSelected
-                          ? 'border-emerald-500 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 font-semibold shadow-xs ring-1 ring-emerald-500/30'
-                          : 'border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800/80 text-neutral-800 dark:text-neutral-200'
-                      }`}
-                    >
-                      <div className="flex items-center gap-3 min-w-0 pr-2">
-                        <div
-                          className={`p-2 rounded-xl transition-colors ${
-                            isSelected
-                              ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400'
-                              : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400'
-                          }`}
-                        >
-                          {opt.icon || <Mic className="h-4 w-4" />}
-                        </div>
-                        <div className="truncate">
-                          <div className="text-sm font-semibold truncate">{opt.label}</div>
-                          {opt.description && (
-                            <div className="text-[11px] text-neutral-400 font-normal truncate">
-                              {opt.description}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Theme-Matched Selection Pill Checkmark */}
-                      <div
-                        className={`h-5 w-5 rounded-full flex items-center justify-center shrink-0 border transition-all ${
-                          isSelected
-                            ? 'border-emerald-500 bg-emerald-500 text-white shadow-xs'
-                            : 'border-neutral-300 dark:border-neutral-700 bg-transparent'
-                        }`}
-                      >
-                        {isSelected && <Check className="h-3 w-3 stroke-[3]" />}
-                      </div>
-                    </button>
-                  );
-                })
+                options.map((opt) => (
+                  <OptionItem
+                    key={opt.value}
+                    isMobile
+                    option={opt}
+                    isSelected={opt.value === value || (!value && opt === options[0])}
+                    onSelect={() => {
+                      onChange(opt.value);
+                      setIsOpen(false);
+                    }}
+                  />
+                ))
               )}
             </div>
           </div>
@@ -240,4 +185,79 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
   );
 };
 
-export default CustomSelect;
+interface OptionItemProps {
+  option: SelectOption;
+  isSelected: boolean;
+  onSelect: () => void;
+  isMobile?: boolean;
+}
+
+const OptionItem: React.FC<OptionItemProps> = ({
+  option,
+  isSelected,
+  onSelect,
+  isMobile = false,
+}) => {
+  if (isMobile) {
+    return (
+      <button
+        type="button"
+        onClick={onSelect}
+        className={`w-full flex items-center justify-between p-3 rounded-2xl border text-left transition-all cursor-pointer ${
+          isSelected
+            ? 'border-emerald-500 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 font-semibold shadow-xs ring-1 ring-emerald-500/30'
+            : 'border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800/80 text-neutral-800 dark:text-neutral-200'
+        }`}
+      >
+        <div className="flex items-center gap-3 min-w-0 pr-2">
+          <div
+            className={`p-2 rounded-xl transition-colors ${
+              isSelected
+                ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400'
+                : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400'
+            }`}
+          >
+            {option.icon || <Mic className="h-4 w-4" />}
+          </div>
+          <div className="truncate">
+            <div className="text-sm font-semibold truncate">{option.label}</div>
+            {option.description && (
+              <div className="text-[11px] text-neutral-400 font-normal truncate">
+                {option.description}
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div
+          className={`h-5 w-5 rounded-full flex items-center justify-center shrink-0 border transition-all ${
+            isSelected
+              ? 'border-emerald-500 bg-emerald-500 text-white shadow-xs'
+              : 'border-neutral-300 dark:border-neutral-700 bg-transparent'
+          }`}
+        >
+          {isSelected && <Check className="h-3 w-3 stroke-[3]" />}
+        </div>
+      </button>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      className={`w-full flex items-center justify-between px-3 py-2 text-xs sm:text-sm text-left transition-colors cursor-pointer ${
+        isSelected
+          ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-semibold'
+          : 'text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800/80'
+      }`}
+    >
+      <div className="flex items-center gap-2.5 truncate pr-2">
+        {option.icon || <Mic className="h-4 w-4 text-emerald-500 shrink-0" />}
+        <span className="truncate">{option.label}</span>
+      </div>
+
+      {isSelected && <Check className="h-4 w-4 text-emerald-500 shrink-0 stroke-[2.5]" />}
+    </button>
+  );
+};

@@ -1,24 +1,18 @@
 import * as Mp4Muxer from 'mp4-muxer';
 import { audioBufferToWav } from './wavEncoder';
+import { recordBufferWithMediaRecorder } from './mediaRecorderHelper';
 
 /**
  * 100% offline, on-device M4A (AAC) encoder.
  * Utilizes WebCodecs AudioEncoder + mp4-muxer for high quality AAC in an M4A container.
  */
-export async function audioBufferToM4a(
-  audioBuffer: AudioBuffer,
-  bitrate = 192000
-): Promise<Blob> {
+export async function audioBufferToM4a(audioBuffer: AudioBuffer, bitrate = 192000): Promise<Blob> {
   const sampleRate = audioBuffer.sampleRate;
   const numberOfChannels = audioBuffer.numberOfChannels;
   const length = audioBuffer.length;
 
   // Check WebCodecs AudioEncoder availability
-  if (
-    typeof window !== 'undefined' &&
-    'AudioEncoder' in window &&
-    'AudioData' in window
-  ) {
+  if (typeof window !== 'undefined' && 'AudioEncoder' in window && 'AudioData' in window) {
     try {
       const isSupported = await AudioEncoder.isConfigSupported({
         codec: 'mp4a.40.2',
@@ -75,7 +69,7 @@ export async function audioBufferToM4a(
             const channelSource = audioBuffer.getChannelData(c);
             chunkPlanar.set(
               channelSource.subarray(currentOffset, currentOffset + framesInChunk),
-              c * framesInChunk
+              c * framesInChunk,
             );
           }
 
@@ -118,44 +112,4 @@ export async function audioBufferToM4a(
   // If neither WebCodecs nor MP4 MediaRecorder is available (e.g. Firefox desktop without AAC recorder),
   // fallback to WAV format with m4a naming or inform user
   return audioBufferToWav(audioBuffer);
-}
-
-function recordBufferWithMediaRecorder(
-  buffer: AudioBuffer,
-  mimeType: string
-): Promise<Blob> {
-  return new Promise((resolve, reject) => {
-    const ctx = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
-    const dest = ctx.createMediaStreamDestination();
-    const source = ctx.createBufferSource();
-    source.buffer = buffer;
-    source.connect(dest);
-
-    const recorder = new MediaRecorder(dest.stream, { mimeType });
-    const chunks: Blob[] = [];
-
-    recorder.ondataavailable = (e) => {
-      if (e.data.size > 0) chunks.push(e.data);
-    };
-
-    recorder.onstop = () => {
-      ctx.close();
-      resolve(new Blob(chunks, { type: mimeType }));
-    };
-
-    recorder.onerror = (e) => {
-      ctx.close();
-      reject(e);
-    };
-
-    recorder.start();
-    source.start(0);
-
-    setTimeout(() => {
-      if (recorder.state === 'recording') {
-        recorder.stop();
-        source.stop();
-      }
-    }, buffer.duration * 1000 + 150);
-  });
 }
