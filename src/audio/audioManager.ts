@@ -1,7 +1,7 @@
 import { AudioStats, MicConstraints, PitchInfo } from './types';
 import { detectPitch } from './pitchDetector';
 
-export class AudioManager {
+class AudioManager {
   private ctx: AudioContext | null = null;
   private stream: MediaStream | null = null;
   private sourceNode: MediaStreamAudioSourceNode | null = null;
@@ -47,7 +47,7 @@ export class AudioManager {
       throw new Error(
         'Microphone access is blocked by your browser because this page is not served over a Secure Context (HTTPS or localhost). Mobile browsers disable microphone access on plain HTTP over local network IPs (e.g. http://192.168.x.x). Please connect using HTTPS (https://' +
           window.location.host +
-          ') or test the deployed production URL.'
+          ') or test the deployed production URL.',
       );
     }
 
@@ -57,7 +57,7 @@ export class AudioManager {
       !navigator.mediaDevices.getUserMedia
     ) {
       throw new Error(
-        'Your browser does not support or has blocked microphone access (navigator.mediaDevices.getUserMedia is unavailable). Please make sure you are using a modern browser over HTTPS.'
+        'Your browser does not support or has blocked microphone access (navigator.mediaDevices.getUserMedia is unavailable). Please make sure you are using a modern browser over HTTPS.',
       );
     }
 
@@ -90,7 +90,7 @@ export class AudioManager {
       this.monitorGainNode.gain.setTargetAtTime(
         enabled ? this.monitorVolume : 0,
         this.ctx.currentTime,
-        0.05
+        0.05,
       );
     }
   }
@@ -203,7 +203,7 @@ export class AudioManager {
     const audioBuffer = this.ctx.createBuffer(
       this.recordingChannels,
       totalFrames,
-      this.recordingSampleRate
+      this.recordingSampleRate,
     );
 
     for (let c = 0; c < this.recordingChannels; c++) {
