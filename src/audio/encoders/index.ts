@@ -1,8 +1,5 @@
 import { AudioFormat, ExportedAudio } from '../types';
 import { audioBufferToWav } from './wavEncoder';
-import { audioBufferToMp3 } from './mp3Encoder';
-import { audioBufferToM4a } from './m4aEncoder';
-import { audioBufferToWebm } from './webmEncoder';
 
 export async function exportAudio(
   audioBuffer: AudioBuffer,
@@ -19,18 +16,24 @@ export async function exportAudio(
       blob = audioBufferToWav(audioBuffer);
       mimeType = 'audio/wav';
       break;
-    case 'mp3':
+    case 'mp3': {
+      const { audioBufferToMp3 } = await import('./mp3Encoder');
       blob = await audioBufferToMp3(audioBuffer, bitrateKbps);
       mimeType = 'audio/mp3';
       break;
-    case 'm4a':
+    }
+    case 'm4a': {
+      const { audioBufferToM4a } = await import('./m4aEncoder');
       blob = await audioBufferToM4a(audioBuffer, bitrateKbps * 1000);
       mimeType = 'audio/mp4';
       break;
-    case 'webm':
+    }
+    case 'webm': {
+      const { audioBufferToWebm } = await import('./webmEncoder');
       blob = await audioBufferToWebm(audioBuffer);
       mimeType = 'audio/webm';
       break;
+    }
     default:
       blob = audioBufferToWav(audioBuffer);
       mimeType = 'audio/wav';

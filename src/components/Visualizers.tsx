@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
-import { Tabs, TabsList, TabsTrigger } from './ui/tabs';
 import { Badge } from './ui/badge';
 import { AudioStats, PitchInfo } from '@/audio/types';
 import { Activity, BarChart3, Mic2, AlertTriangle, Music } from 'lucide-react';
@@ -163,22 +162,38 @@ export const Visualizers: React.FC<VisualizersProps> = ({
               <CardTitle className="text-base font-semibold">Live Visualizer</CardTitle>
             </div>
 
-            <Tabs
-              value={activeTab}
-              onValueChange={(v) => setActiveTab(v as 'waveform' | 'spectrum')}
-              className="w-full sm:w-auto"
+            <div
+              role="group"
+              aria-label="Visualizer display mode"
+              className="inline-flex h-8 items-center justify-center rounded-lg bg-neutral-100 p-1 text-neutral-500 dark:bg-neutral-800 dark:text-neutral-400 w-full sm:w-auto grid grid-cols-2 sm:flex"
             >
-              <TabsList className="h-8 w-full sm:w-auto grid grid-cols-2 sm:flex">
-                <TabsTrigger value="waveform" className="text-xs px-2.5">
-                  <Activity className="h-3 w-3 mr-1 shrink-0" />
-                  Oscilloscope
-                </TabsTrigger>
-                <TabsTrigger value="spectrum" className="text-xs px-2.5">
-                  <BarChart3 className="h-3 w-3 mr-1 shrink-0" />
-                  FFT Spectrum
-                </TabsTrigger>
-              </TabsList>
-            </Tabs>
+              <button
+                type="button"
+                aria-pressed={activeTab === 'waveform'}
+                onClick={() => setActiveTab('waveform')}
+                className={`inline-flex items-center justify-center whitespace-nowrap rounded-md py-1 text-xs font-medium ring-offset-white transition-all px-2.5 cursor-pointer ${
+                  activeTab === 'waveform'
+                    ? 'bg-white text-neutral-950 shadow-xs dark:bg-neutral-950 dark:text-neutral-50 font-semibold'
+                    : 'hover:text-neutral-900 dark:hover:text-neutral-100'
+                }`}
+              >
+                <Activity className="h-3 w-3 mr-1 shrink-0 text-emerald-500" />
+                Oscilloscope
+              </button>
+              <button
+                type="button"
+                aria-pressed={activeTab === 'spectrum'}
+                onClick={() => setActiveTab('spectrum')}
+                className={`inline-flex items-center justify-center whitespace-nowrap rounded-md py-1 text-xs font-medium ring-offset-white transition-all px-2.5 cursor-pointer ${
+                  activeTab === 'spectrum'
+                    ? 'bg-white text-neutral-950 shadow-xs dark:bg-neutral-950 dark:text-neutral-50 font-semibold'
+                    : 'hover:text-neutral-900 dark:hover:text-neutral-100'
+                }`}
+              >
+                <BarChart3 className="h-3 w-3 mr-1 shrink-0 text-cyan-500" />
+                FFT Spectrum
+              </button>
+            </div>
           </div>
         </CardHeader>
 

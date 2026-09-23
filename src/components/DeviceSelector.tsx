@@ -144,6 +144,7 @@ export const DeviceSelector: React.FC<DeviceSelectorProps> = ({
               size="icon"
               onClick={onRefreshDevices}
               title="Refresh microphone device list"
+              aria-label="Refresh microphone device list"
               className="shrink-0"
             >
               <RefreshCw className="h-4 w-4" />
@@ -179,6 +180,7 @@ export const DeviceSelector: React.FC<DeviceSelectorProps> = ({
               <div className="text-[10px] text-neutral-500 dark:text-neutral-400">Acoustic echo filter</div>
             </div>
             <Switch
+              aria-label="Toggle acoustic echo cancellation"
               checked={constraints.echoCancellation}
               onCheckedChange={() => handleToggleConstraint('echoCancellation')}
             />
@@ -191,6 +193,7 @@ export const DeviceSelector: React.FC<DeviceSelectorProps> = ({
               <div className="text-[10px] text-neutral-500 dark:text-neutral-400">Reduce room hum</div>
             </div>
             <Switch
+              aria-label="Toggle background noise suppression"
               checked={constraints.noiseSuppression}
               onCheckedChange={() => handleToggleConstraint('noiseSuppression')}
             />
@@ -203,6 +206,7 @@ export const DeviceSelector: React.FC<DeviceSelectorProps> = ({
               <div className="text-[10px] text-neutral-500 dark:text-neutral-400">Dynamic leveling</div>
             </div>
             <Switch
+              aria-label="Toggle dynamic auto gain control"
               checked={constraints.autoGainControl}
               onCheckedChange={() => handleToggleConstraint('autoGainControl')}
             />
@@ -216,25 +220,27 @@ export const DeviceSelector: React.FC<DeviceSelectorProps> = ({
                 {constraints.channelCount === 1 ? '1ch Mono' : '2ch Stereo'}
               </div>
             </div>
-            <div className="flex rounded-lg bg-neutral-200 dark:bg-neutral-800 p-0.5 text-xs font-medium">
+            <div className="flex rounded-lg bg-neutral-200 dark:bg-neutral-800 p-0.5 text-xs font-medium" role="group" aria-label="Audio Channels">
               <button
                 type="button"
+                aria-label="1 Channel Mono"
                 onClick={() => handleChannelToggle(1)}
-                className={`px-2 py-0.5 rounded-md transition-all ${
+                className={`h-7 min-w-[28px] px-2.5 py-1 rounded-md transition-all text-xs font-semibold flex items-center justify-center ${
                   constraints.channelCount === 1
                     ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 shadow-xs'
-                    : 'text-neutral-600 dark:text-neutral-400'
+                    : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'
                 }`}
               >
                 1
               </button>
               <button
                 type="button"
+                aria-label="2 Channel Stereo"
                 onClick={() => handleChannelToggle(2)}
-                className={`px-2 py-0.5 rounded-md transition-all ${
+                className={`h-7 min-w-[28px] px-2.5 py-1 rounded-md transition-all text-xs font-semibold flex items-center justify-center ${
                   constraints.channelCount === 2
                     ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 shadow-xs'
-                    : 'text-neutral-600 dark:text-neutral-400'
+                    : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'
                 }`}
               >
                 2
@@ -266,6 +272,7 @@ export const DeviceSelector: React.FC<DeviceSelectorProps> = ({
                   <Volume2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
                 )}
                 <Slider
+                  aria-label="Direct monitoring volume"
                   disabled={!isMonitoring}
                   value={[monitorVolume * 100]}
                   min={0}
@@ -274,12 +281,13 @@ export const DeviceSelector: React.FC<DeviceSelectorProps> = ({
                   onValueChange={(val) => onMonitorVolumeChange(val[0] / 100)}
                   className="w-full"
                 />
-                <span className="font-mono text-xs text-neutral-500 w-8 text-right">
+                <span className="font-mono text-xs text-neutral-700 dark:text-neutral-300 w-8 text-right font-medium">
                   {Math.round(monitorVolume * 100)}%
                 </span>
               </div>
 
               <Switch
+                aria-label="Toggle direct audio monitoring"
                 checked={isMonitoring}
                 onCheckedChange={handleMonitoringClick}
                 disabled={!isActive}

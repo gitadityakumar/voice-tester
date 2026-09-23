@@ -2,11 +2,20 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Header } from './components/Header';
 import { DeviceSelector } from './components/DeviceSelector';
 import { Visualizers } from './components/Visualizers';
-import { Recorder } from './components/Recorder';
-import { BenchmarkPage } from './components/BenchmarkPage';
-import { PrivacyModal } from './components/PrivacyModal';
 import { FeaturesSection } from './components/FeaturesSection';
 import { MobileNav } from './components/MobileNav';
+
+const Recorder = React.lazy(() =>
+  import('./components/Recorder').then((m) => ({ default: m.Recorder }))
+);
+
+const BenchmarkPage = React.lazy(() =>
+  import('./components/BenchmarkPage').then((m) => ({ default: m.BenchmarkPage }))
+);
+
+const PrivacyModal = React.lazy(() =>
+  import('./components/PrivacyModal').then((m) => ({ default: m.PrivacyModal }))
+);
 import { audioManager } from './audio/audioManager';
 import { AudioStats, MicConstraints, PitchInfo } from './audio/types';
 import { ShieldCheck, AlertCircle, Lock } from 'lucide-react';
@@ -406,13 +415,21 @@ export const App: React.FC = () => {
         >
           {/* Route: Dedicated Benchmark Page */}
           {currentRoute === 'benchmark' ? (
-            <BenchmarkPage
-              isActive={isActive}
-              onStartMic={startMic}
-              onNavigateHome={() => navigateTo('tester')}
-              onRunGuidedTest={handleRunGuidedTest}
-              stats={stats}
-            />
+            <React.Suspense
+              fallback={
+                <div className="min-h-96 rounded-2xl border border-neutral-200/80 dark:border-neutral-800/80 bg-white/70 dark:bg-neutral-900/60 backdrop-blur-md flex items-center justify-center p-8 text-neutral-400 text-sm">
+                  Loading Acoustic Benchmark Suite...
+                </div>
+              }
+            >
+              <BenchmarkPage
+                isActive={isActive}
+                onStartMic={startMic}
+                onNavigateHome={() => navigateTo('tester')}
+                onRunGuidedTest={handleRunGuidedTest}
+                stats={stats}
+              />
+            </React.Suspense>
           ) : (
             /* Route: Main Microphone Tester & Recording Deck */
             <>
@@ -441,14 +458,22 @@ export const App: React.FC = () => {
               />
 
               {/* Test Recording & Multi-Format Exporter with Editable Trimmer */}
-              <Recorder
-                isActive={isActive}
-                isRecording={isRecording}
-                onStartRecording={handleStartRecording}
-                onStopRecording={handleStopRecording}
-                audioBuffer={audioBuffer}
-                onClearRecording={() => setAudioBuffer(null)}
-              />
+              <React.Suspense
+                fallback={
+                  <div className="h-44 rounded-2xl border border-neutral-200/80 dark:border-neutral-800/80 bg-white/70 dark:bg-neutral-900/60 animate-pulse flex items-center justify-center text-xs text-neutral-400">
+                    Loading recording deck...
+                  </div>
+                }
+              >
+                <Recorder
+                  isActive={isActive}
+                  isRecording={isRecording}
+                  onStartRecording={handleStartRecording}
+                  onStopRecording={handleStopRecording}
+                  audioBuffer={audioBuffer}
+                  onClearRecording={() => setAudioBuffer(null)}
+                />
+              </React.Suspense>
 
               {/* Informational Web App Properties & Features Grid */}
               <FeaturesSection />
@@ -475,10 +500,14 @@ export const App: React.FC = () => {
       </footer>
 
       {/* Privacy Guarantee Modal */}
-      <PrivacyModal
-        open={privacyModalOpen}
-        onOpenChange={setPrivacyModalOpen}
-      />
+      {privacyModalOpen && (
+        <React.Suspense fallback={null}>
+          <PrivacyModal
+            open={privacyModalOpen}
+            onOpenChange={setPrivacyModalOpen}
+          />
+        </React.Suspense>
+      )}
     </div>
   );
 };
