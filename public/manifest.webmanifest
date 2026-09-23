@@ -1,0 +1,16 @@
+{
+  "name": "VoiceTester — On-Device Microphone Tester",
+  "short_name": "VoiceTester",
+  "description": "Completely offline, on-device voice and microphone tester. No data sent to any server.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#09090b",
+  "theme_color": "#09090b",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

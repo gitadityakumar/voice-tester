@@ -1,0 +1,5 @@
+name = "online-voice-tester"
+compatibility_date = "2024-09-23"
+
+# Cloudflare Pages deployment configuration
+pages_build_output_dir = "dist"
