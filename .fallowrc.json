@@ -1,0 +1,8 @@
+{
+  "$schema": "./node_modules/fallow/schema.json",
+  "entry": ["src/main.{ts,tsx,js,jsx}", "public/sw.js", "vite.config.ts"],
+  "duplicates": {
+    "minOccurrences": 2
+  },
+  "rules": {}
+}

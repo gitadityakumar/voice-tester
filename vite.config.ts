@@ -30,7 +30,6 @@ export default defineConfig({
             '@radix-ui/react-dialog',
             '@radix-ui/react-slider',
             '@radix-ui/react-switch',
-            '@radix-ui/react-tabs',
           ],
           'audio-lame': ['@breezystack/lamejs'],
           'audio-muxer': ['mp4-muxer'],
