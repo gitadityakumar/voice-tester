@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Mic, Moon, Sun, WifiOff, Award, MoreHorizontal, X } from "lucide-react";
+import { Mic, Moon, Sun, WifiOff, Gauge, MoreHorizontal, X } from "lucide-react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { LiveMicIcon } from "./LiveMicIcon";
@@ -107,7 +107,7 @@ export const Header: React.FC<HeaderProps> = ({
                 : "text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100"
               }`}
           >
-            <Award className="h-3.5 w-3.5" />
+            <Gauge className="h-3.5 w-3.5" />
             <span>Benchmark</span>
             {currentRoute === "benchmark" && (
               <span className="absolute -bottom-1 left-0 right-0 h-0.5 bg-emerald-500 rounded-full" />

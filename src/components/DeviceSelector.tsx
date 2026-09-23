@@ -4,6 +4,7 @@ import { Switch } from './ui/switch';
 import { Slider } from './ui/slider';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
+import { CustomSelect, SelectOption } from './ui/custom-select';
 import { MicConstraints } from '@/audio/types';
 import {
   Mic,
@@ -63,6 +64,40 @@ export const DeviceSelector: React.FC<DeviceSelectorProps> = ({
     onToggleMonitoring(checked);
   };
 
+  const getDeviceIcon = (label: string) => {
+    const l = label.toLowerCase();
+    if (
+      l.includes('headset') ||
+      l.includes('earpiece') ||
+      l.includes('airpods') ||
+      l.includes('buds') ||
+      l.includes('bluetooth')
+    ) {
+      return <Headphones className="h-4 w-4 text-emerald-500 shrink-0" />;
+    }
+    if (l.includes('speaker') || l.includes('speakerphone')) {
+      return <Volume2 className="h-4 w-4 text-cyan-500 shrink-0" />;
+    }
+    return <Mic className="h-4 w-4 text-emerald-500 shrink-0" />;
+  };
+
+  const deviceOptions: SelectOption[] =
+    devices.length === 0
+      ? [
+          {
+            value: '',
+            label: 'Default Microphone (Click "Start Mic" to grant access)',
+            icon: <Mic className="h-4 w-4 text-emerald-500 shrink-0" />,
+            description: 'System default audio input',
+          },
+        ]
+      : devices.map((device, idx) => ({
+          value: device.deviceId,
+          label: device.label || `Microphone ${idx + 1}`,
+          icon: getDeviceIcon(device.label || ''),
+          description: device.deviceId ? `Audio input channel ${idx + 1}` : 'Default input',
+        }));
+
   return (
     <Card className="border-neutral-200/80 dark:border-neutral-800/80">
       <CardHeader className="pb-3">
@@ -91,30 +126,16 @@ export const DeviceSelector: React.FC<DeviceSelectorProps> = ({
         {/* Device Selection & Activation */}
         <div className="flex flex-col sm:flex-row gap-2">
           <div className="relative flex-1">
-            <label htmlFor="microphone-select" className="sr-only">
-              Select Microphone Device
-            </label>
-            <select
+            <CustomSelect
               id="microphone-select"
               name="microphone"
-              aria-label="Select Microphone Device"
+              options={deviceOptions}
               value={constraints.deviceId}
-              onChange={(e) => handleDeviceSelect(e.target.value)}
-              className="w-full h-10 px-3 py-2 pr-8 text-sm rounded-xl border border-neutral-300 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium cursor-pointer appearance-none transition-colors"
-            >
-              {devices.length === 0 ? (
-                <option value="">Default Microphone (Click 'Start Mic' to grant access)</option>
-              ) : (
-                devices.map((device, idx) => (
-                  <option key={device.deviceId || idx} value={device.deviceId}>
-                    {device.label || `Microphone ${idx + 1}`}
-                  </option>
-                ))
-              )}
-            </select>
-            <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400">
-              ▼
-            </div>
+              onChange={handleDeviceSelect}
+              placeholder="Select Microphone Device"
+              modalTitle="Audio Input Device"
+              modalSubtitle="Choose your microphone or headset"
+            />
           </div>
 
           <div className="flex gap-2">

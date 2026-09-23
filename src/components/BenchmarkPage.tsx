@@ -5,7 +5,7 @@ import { Badge } from './ui/badge';
 import { MicQualityReport, AudioStats } from '@/audio/types';
 import { analyzeMicQuality } from '@/audio/qualityAnalyzer';
 import {
-  Award,
+  Gauge,
   CheckCircle,
   Sparkles,
   ArrowLeft,
@@ -125,7 +125,7 @@ export const BenchmarkPage: React.FC<BenchmarkPageProps> = ({
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400 flex items-center justify-center ring-1 ring-emerald-500/20">
-                <Award className="h-5 w-5" />
+                <Gauge className="h-5 w-5" />
               </div>
               <div>
                 <CardTitle className="text-lg font-bold">Microphone Health & Quality Benchmark</CardTitle>

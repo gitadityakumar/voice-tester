@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mic, Award, Moon, Sun, ChevronRight, Home, ShieldCheck, X } from 'lucide-react';
+import { Mic, Gauge, Moon, Sun, ChevronRight, Home, ShieldCheck, X } from 'lucide-react';
 
 interface MobileNavProps {
   currentRoute: 'tester' | 'benchmark';
@@ -44,7 +44,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
               </>
             ) : (
               <>
-                <Award className="h-3 w-3" />
+                <Gauge className="h-3 w-3" />
                 Benchmark
               </>
             )}
@@ -132,7 +132,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
               >
                 <div className="flex items-center gap-3">
                   <div className="p-2 rounded-lg bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
-                    <Award className="h-4 w-4" />
+                    <Gauge className="h-4 w-4" />
                   </div>
                   <div>
                     <div className="text-sm font-semibold">Acoustic Benchmark</div>
@@ -208,7 +208,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
           }`}
         >
           <div className={`p-1 rounded-lg transition-transform ${currentRoute === 'benchmark' ? 'bg-emerald-500/15 scale-110' : ''}`}>
-            <Award className="h-4 w-4" />
+            <Gauge className="h-4 w-4" />
           </div>
           <span className="text-[10px]">Benchmark</span>
         </button>
