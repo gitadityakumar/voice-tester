@@ -206,7 +206,7 @@ const App: React.FC = () => {
         );
       } else if (e.name === 'NotFoundError') {
         setPermissionError(
-          'No microphone hardware detected. Please plug in a microphone and retry.',
+          'No microphone hardware detected. If a microphone is connected, check: (1) Browser permissions or Brave Shields (allow microphone in the address bar), or (2) Restart your browser if the system audio service recently restarted.',
         );
       } else if (
         e.name === 'NotReadableError' ||
