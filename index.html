@@ -25,6 +25,7 @@
       content="100% offline, on-device voice and microphone tester. Test mic hardware, inspect latency, visual waveforms, check background noise, and export in MP3, M4A, WAV without sending a single byte to any server."
     />
     <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="ai-catalog" href="/.well-known/ai-catalog.json" />
     <title>VoiceTester — 100% Offline On-Device Mic Tester</title>
     <!-- Prevent theme flashing (FOUC) adhering to modern web guidance -->
     <script>
@@ -47,8 +48,13 @@
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     <script>
-      // Register PWA service worker for full offline support
-      if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+      // Register PWA service worker for full offline support (skip localhost dev with self-signed certs)
+      if (
+        'serviceWorker' in navigator &&
+        window.location.protocol === 'https:' &&
+        window.location.hostname !== 'localhost' &&
+        window.location.hostname !== '127.0.0.1'
+      ) {
         window.addEventListener('load', () => {
           navigator.serviceWorker.register('/sw.js').catch(() => {});
         });

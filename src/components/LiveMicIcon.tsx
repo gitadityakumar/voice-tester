@@ -15,6 +15,7 @@ export const LiveMicIcon: React.FC<LiveMicIconProps> = ({
   accentColor = '#10B981',
   showWaves = true,
   animate = true,
+  isLive: _isLive = false,
   className = '',
   ...props
 }) => {

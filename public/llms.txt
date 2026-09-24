@@ -1,0 +1,16 @@
+# VoiceTester — 100% Offline On-Device Microphone Tester
+
+> VoiceTester is a private, client-side, on-device audio latency, waveform inspection, background noise analysis, and microphone diagnostic testing suite. All digital signal processing (DSP) and audio recording runs 100% locally in browser memory without sending any audio bytes to external servers.
+
+## Features and Capabilities
+- Real-time Audio Hardware Inspection: Test input channels, sample rates, acoustic echo cancellation (AEC), noise suppression, and auto gain control (AGC).
+- Live Oscilloscope & Audio Spectrogram: Real-time 60fps canvas-rendered time-domain waveforms and FFT frequency spectrum visualizations.
+- Direct Monitoring ("Hear Yourself"): Ultra-low latency hardware feedback loop.
+- Acoustic Health Benchmark: Automated 5-second test measuring Signal-to-Noise Ratio (SNR), Noise Floor dB, Clipping Frequency, and Vocal Clarity.
+- Multi-format Recording: In-browser lossless WAV, WebM, MP3, and M4A audio export.
+
+## Key Links
+- [VoiceTester Web Application](https://voicetester.app/): Main interactive microphone testing suite.
+- [Acoustic Benchmark Suite](https://voicetester.app/benchmark): Automated 5-second microphone health and SNR diagnostic tests.
+- [GitHub Repository](https://github.com/gitadityakumar/voice-tester): Source code and open-source project repository.
+- [Author Portfolio](https://100xadi.com): Aditya Kumar's website and developer contact.

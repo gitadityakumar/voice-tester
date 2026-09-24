@@ -2,12 +2,10 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Header } from './components/Header';
 import { DeviceSelector } from './components/DeviceSelector';
 import { Visualizers } from './components/Visualizers';
-import { FeaturesSection } from './components/FeaturesSection';
 import { MobileNav } from './components/MobileNav';
 
-const Recorder = React.lazy(() =>
-  import('./components/Recorder').then((m) => ({ default: m.Recorder })),
-);
+import { FeaturesSection } from './components/FeaturesSection';
+import { Recorder } from './components/Recorder';
 
 const BenchmarkPage = React.lazy(() =>
   import('./components/BenchmarkPage').then((m) => ({ default: m.BenchmarkPage })),
@@ -154,13 +152,17 @@ const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    refreshDevices();
+    const timer = setTimeout(() => {
+      refreshDevices();
+    }, 200);
     if (navigator.mediaDevices && navigator.mediaDevices.addEventListener) {
       navigator.mediaDevices.addEventListener('devicechange', refreshDevices);
       return () => {
+        clearTimeout(timer);
         navigator.mediaDevices.removeEventListener('devicechange', refreshDevices);
       };
     }
+    return () => clearTimeout(timer);
   }, [refreshDevices]);
 
   // Start microphone
@@ -439,22 +441,14 @@ const App: React.FC = () => {
               />
 
               {/* Test Recording & Multi-Format Exporter with Editable Trimmer */}
-              <React.Suspense
-                fallback={
-                  <div className="h-44 rounded-2xl border border-neutral-200/80 dark:border-neutral-800/80 bg-white/70 dark:bg-neutral-900/60 animate-pulse flex items-center justify-center text-xs text-neutral-400">
-                    Loading recording deck...
-                  </div>
-                }
-              >
-                <Recorder
-                  isActive={isActive}
-                  isRecording={isRecording}
-                  onStartRecording={handleStartRecording}
-                  onStopRecording={handleStopRecording}
-                  audioBuffer={audioBuffer}
-                  onClearRecording={() => setAudioBuffer(null)}
-                />
-              </React.Suspense>
+              <Recorder
+                isActive={isActive}
+                isRecording={isRecording}
+                onStartRecording={handleStartRecording}
+                onStopRecording={handleStopRecording}
+                audioBuffer={audioBuffer}
+                onClearRecording={() => setAudioBuffer(null)}
+              />
 
               {/* Informational Web App Properties & Features Grid */}
               <FeaturesSection />
