@@ -111,7 +111,7 @@ npx wrangler pages deploy dist --project-name=online-voice-tester
 The included `public/_headers` file applies security headers on Cloudflare Pages:
 
 - `Permissions-Policy: microphone=(self), camera=(), geolocation=()` (Restricts microphone access strictly to your own origin)
-- `Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; media-src 'self' blob:; worker-src 'self' blob:; connect-src 'self'` (Prevents audio exfiltration)
+- `Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; media-src 'self' blob:; worker-src 'self' blob:; connect-src 'self' https://cloudflareinsights.com` (Prevents unauthorized external tracking and audio exfiltration)
 
 ---
 
