@@ -5,7 +5,7 @@
       "identifier": "urn:air:voicetester:tools:mic-test",
       "displayName": "VoiceTester Microphone Diagnostics",
       "type": "application/agent-card+json",
-      "url": "https://voicetester.app/",
+      "url": "https://voicetester.100xadi.com/",
       "description": "On-device microphone latency, acoustic health benchmark, and waveform test tools.",
       "representativeQueries": [
         "test microphone online",

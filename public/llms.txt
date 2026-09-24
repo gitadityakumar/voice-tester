@@ -10,7 +10,7 @@
 - Multi-format Recording: In-browser lossless WAV, WebM, MP3, and M4A audio export.
 
 ## Key Links
-- [VoiceTester Web Application](https://voicetester.app/): Main interactive microphone testing suite.
-- [Acoustic Benchmark Suite](https://voicetester.app/benchmark): Automated 5-second microphone health and SNR diagnostic tests.
+- [VoiceTester Web Application](https://voicetester.100xadi.com/): Main interactive microphone testing suite.
+- [Acoustic Benchmark Suite](https://voicetester.100xadi.com/benchmark): Automated 5-second microphone health and SNR diagnostic tests.
 - [GitHub Repository](https://github.com/gitadityakumar/voice-tester): Source code and open-source project repository.
 - [Author Portfolio](https://100xadi.com): Aditya Kumar's website and developer contact.
