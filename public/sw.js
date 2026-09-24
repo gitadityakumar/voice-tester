@@ -1,4 +1,4 @@
-const CACHE_NAME = 'voicetester-v1';
+const CACHE_NAME = 'voicetester-v2';
 const ASSETS_TO_CACHE = ['/', '/index.html', '/favicon.svg', '/manifest.webmanifest'];
 
 self.addEventListener('install', (event) => {
@@ -33,6 +33,11 @@ self.addEventListener('fetch', (event) => {
   // Only cache GET requests
   if (event.request.method !== 'GET') return;
 
+  const url = new URL(event.request.url);
+
+  // Only handle same-origin requests; let browser natively handle cross-origin scripts/CDNs/analytics
+  if (url.origin !== self.location.origin) return;
+
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
@@ -66,11 +71,16 @@ self.addEventListener('fetch', (event) => {
 
           return networkResponse;
         })
-        .catch(() => {
+        .catch(async () => {
           // Fallback for offline navigation
           if (event.request.mode === 'navigate') {
-            return caches.match('/index.html');
+            const cachedIndex = await caches.match('/index.html');
+            if (cachedIndex) return cachedIndex;
           }
+          return new Response('Network error occurred', {
+            status: 408,
+            headers: { 'Content-Type': 'text/plain' },
+          });
         });
     }),
   );

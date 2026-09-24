@@ -31,8 +31,15 @@ const App: React.FC = () => {
     return 'tester';
   };
 
-  const [currentRoute, setCurrentRoute] = useState<'tester' | 'benchmark'>(getInitialRoute);
+  const [currentRoute, setCurrentRoute] = useState<'tester' | 'benchmark'>('tester');
   const [navDirection, setNavDirection] = useState<'forward' | 'backward'>('forward');
+
+  useEffect(() => {
+    const initial = getInitialRoute();
+    if (initial !== 'tester') {
+      setCurrentRoute(initial);
+    }
+  }, []);
 
   const transitionToRoute = useCallback(
     (nextRoute: 'tester' | 'benchmark', updateHistory = false) => {
@@ -96,17 +103,25 @@ const App: React.FC = () => {
   // Audio & Mic state
   const [isActive, setIsActive] = useState<boolean>(false);
   const [permissionError, setPermissionError] = useState<string | null>(null);
-  const [isInsecureContext] = useState<boolean>(() => {
-    if (typeof window === 'undefined') return false;
-    const isLocalhost =
-      window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    return !window.isSecureContext && !isLocalhost;
-  });
+  const [isInsecureContext, setIsInsecureContext] = useState<boolean>(false);
+  const [currentHost, setCurrentHost] = useState<string>('');
+  const [isHttp, setIsHttp] = useState<boolean>(false);
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
   const [privacyModalOpen, setPrivacyModalOpen] = useState<boolean>(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
-  const [isDark, setIsDark] = useState<boolean>(getInitialTheme);
+  const [isDark, setIsDark] = useState<boolean>(true);
+
+  useEffect(() => {
+    setIsDark(getInitialTheme());
+    if (typeof window !== 'undefined') {
+      const isLocalhost =
+        window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      setIsInsecureContext(!window.isSecureContext && !isLocalhost);
+      setCurrentHost(window.location.host);
+      setIsHttp(window.location.protocol === 'http:');
+    }
+  }, []);
 
   const toggleTheme = () => {
     const nextDark = !isDark;
@@ -385,7 +400,7 @@ const App: React.FC = () => {
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-medium text-xs shadow-sm transition-colors cursor-pointer"
               >
                 <Lock className="h-3.5 w-3.5" />
-                Switch to HTTPS: https://{typeof window !== 'undefined' ? window.location.host : ''}
+                Switch to HTTPS: https://{currentHost}
               </button>
               <span className="text-[11px] text-amber-700/80 dark:text-amber-400/80">
                 (Tap "Advanced" → "Proceed to site" to allow the local dev SSL certificate)
@@ -401,7 +416,7 @@ const App: React.FC = () => {
               <AlertCircle className="h-5 w-5 shrink-0 mt-0.5 sm:mt-0" />
               <div className="font-medium">{permissionError}</div>
             </div>
-            {typeof window !== 'undefined' && window.location.protocol === 'http:' && (
+            {isHttp && (
               <button
                 type="button"
                 onClick={() => {

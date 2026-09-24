@@ -25,10 +25,11 @@ export const Header: React.FC<HeaderProps> = ({
   isDark: externalIsDark,
   onToggleTheme: externalToggleTheme,
 }) => {
-  const [internalIsDark, setInternalIsDark] = useState<boolean>(() => {
-    if (typeof window === 'undefined') return true;
-    return document.documentElement.classList.contains('dark');
-  });
+  const [internalIsDark, setInternalIsDark] = useState<boolean>(true);
+
+  React.useEffect(() => {
+    setInternalIsDark(document.documentElement.classList.contains('dark'));
+  }, []);
 
   const isDark = externalIsDark !== undefined ? externalIsDark : internalIsDark;
 
@@ -129,6 +130,7 @@ export const Header: React.FC<HeaderProps> = ({
             size="iconSm"
             onClick={toggleTheme}
             aria-label="Toggle color theme"
+            suppressHydrationWarning
             className="rounded-full text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 h-8 w-8 p-0"
           >
             {isDark ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}

@@ -11,6 +11,11 @@ if (rootElement.hasChildNodes()) {
     <React.StrictMode>
       <App />
     </React.StrictMode>,
+    {
+      onRecoverableError(error, errorInfo) {
+        console.warn('Hydration recoverable error:', error, errorInfo);
+      },
+    },
   );
 } else {
   ReactDOM.createRoot(rootElement).render(
