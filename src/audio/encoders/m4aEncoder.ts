@@ -105,8 +105,14 @@ export async function audioBufferToM4a(audioBuffer: AudioBuffer, bitrate = 19200
   // Fallback: If WebCodecs AAC is unsupported on current browser platform,
   // we fallback to MediaRecorder if audio/mp4 is supported, or synthesize audio
   if (typeof MediaRecorder !== 'undefined' && MediaRecorder.isTypeSupported('audio/mp4')) {
-    // Return promise using an AudioContext source -> MediaRecorder
-    return recordBufferWithMediaRecorder(audioBuffer, 'audio/mp4');
+    try {
+      const blob = await recordBufferWithMediaRecorder(audioBuffer, 'audio/mp4');
+      if (blob && blob.size > 0) {
+        return blob;
+      }
+    } catch (err) {
+      console.warn('MediaRecorder audio/mp4 encoding failed, falling back to WAV:', err);
+    }
   }
 
   // If neither WebCodecs nor MP4 MediaRecorder is available (e.g. Firefox desktop without AAC recorder),

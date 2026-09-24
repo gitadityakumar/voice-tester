@@ -21,6 +21,7 @@ import {
   Scissors,
   Undo2,
   GripHorizontal,
+  AlertCircle,
 } from 'lucide-react';
 
 interface RecorderProps {
@@ -44,6 +45,7 @@ export const Recorder: React.FC<RecorderProps> = ({
   const [selectedBitrate, setSelectedBitrate] = useState<number>(192);
   const [isExporting, setIsExporting] = useState<boolean>(false);
   const [exportedAudio, setExportedAudio] = useState<ExportedAudio | null>(null);
+  const [exportError, setExportError] = useState<string | null>(null);
 
   // Playback state
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -388,12 +390,30 @@ export const Recorder: React.FC<RecorderProps> = ({
     pauseOffsetRef.current = 0;
     setIsTrimModified(false);
     setExportedAudio(null);
+    setExportError(null);
   };
 
-  // Export handling (exports the selected trimmed/slid segment)
+  const downloadAudioFile = (audio: ExportedAudio) => {
+    const url = URL.createObjectURL(audio.blob);
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = url;
+    a.download = audio.filename;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+      if (document.body.contains(a)) {
+        document.body.removeChild(a);
+      }
+      URL.revokeObjectURL(url);
+    }, 1500);
+  };
+
+  // Export handling (exports the selected trimmed/slid segment and downloads immediately)
   const handleExport = async () => {
     if (!currentBuffer) return;
     setIsExporting(true);
+    setExportError(null);
     try {
       let bufferToExport = currentBuffer;
       if (trimStart > 0.05 || trimEnd < currentBuffer.duration - 0.05) {
@@ -401,26 +421,19 @@ export const Recorder: React.FC<RecorderProps> = ({
       }
       const result = await exportAudio(bufferToExport, selectedFormat, selectedBitrate);
       setExportedAudio(result);
+      downloadAudioFile(result);
     } catch (err) {
       console.error('Failed to export audio:', err);
+      setExportError(err instanceof Error ? err.message : 'Encoding failed. Please retry.');
     } finally {
       setIsExporting(false);
     }
   };
 
   const handleDownload = () => {
-    if (!exportedAudio) return;
-    const url = URL.createObjectURL(exportedAudio.blob);
-    const a = document.createElement('a');
-    a.style.display = 'none';
-    a.href = url;
-    a.download = exportedAudio.filename;
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(() => {
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }, 1000);
+    if (exportedAudio) {
+      downloadAudioFile(exportedAudio);
+    }
   };
 
   const totalDuration = currentBuffer?.duration || 1;
@@ -770,10 +783,15 @@ export const Recorder: React.FC<RecorderProps> = ({
             {/* Export and Download Actions */}
             <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
               <div className="text-xs text-neutral-500">
-                {exportedAudio ? (
+                {exportError ? (
+                  <span className="flex items-center gap-1.5 text-rose-500 dark:text-rose-400 font-medium">
+                    <AlertCircle className="h-4 w-4" />
+                    {exportError}
+                  </span>
+                ) : exportedAudio ? (
                   <span className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-medium">
                     <CheckCircle2 className="h-4 w-4" />
-                    Encoded successfully ({formatBytes(exportedAudio.sizeBytes)})
+                    Encoded & Downloaded ({formatBytes(exportedAudio.sizeBytes)})
                   </span>
                 ) : (
                   <span>Ready to compile {selectedFormat.toUpperCase()}</span>

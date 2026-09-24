@@ -25,7 +25,7 @@ export async function exportAudio(
     case 'm4a': {
       const { audioBufferToM4a } = await import('./m4aEncoder');
       blob = await audioBufferToM4a(audioBuffer, bitrateKbps * 1000);
-      mimeType = 'audio/mp4';
+      mimeType = blob.type || 'audio/mp4';
       break;
     }
     case 'webm': {
