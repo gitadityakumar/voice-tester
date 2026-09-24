@@ -61,7 +61,77 @@ class AudioManager {
       );
     }
 
-    this.stream = await navigator.mediaDevices.getUserMedia(mediaConstraints);
+    let stream: MediaStream | null = null;
+    let lastError: unknown = null;
+
+    // 1. Primary attempt: requested constraints
+    try {
+      stream = await navigator.mediaDevices.getUserMedia(mediaConstraints);
+    } catch (err) {
+      lastError = err;
+      console.warn('Primary getUserMedia attempt failed, trying fallback strategies...', err);
+    }
+
+    // 2. Secondary attempt: use ideal deviceId without strict channelCount constraint
+    if (!stream && constraints.deviceId) {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          audio: {
+            deviceId: { ideal: constraints.deviceId },
+            echoCancellation: constraints.echoCancellation,
+            noiseSuppression: constraints.noiseSuppression,
+            autoGainControl: constraints.autoGainControl,
+          },
+          video: false,
+        });
+      } catch (err) {
+        lastError = err;
+      }
+    }
+
+    // 3. Hardware probing attempt: if system default device fails (e.g. Linux ALSA virtual 'default' throws NotReadableError),
+    // try the first available physical hardware device discovered via enumerateDevices()
+    if (!stream && typeof navigator.mediaDevices.enumerateDevices === 'function') {
+      try {
+        const availableDevices = await this.getDevices();
+        const candidateDevices = availableDevices.filter(
+          (d) => d.deviceId && d.deviceId !== 'default' && d.deviceId !== constraints.deviceId,
+        );
+        for (const candidate of candidateDevices) {
+          try {
+            stream = await navigator.mediaDevices.getUserMedia({
+              audio: {
+                deviceId: { exact: candidate.deviceId },
+                echoCancellation: constraints.echoCancellation,
+                noiseSuppression: constraints.noiseSuppression,
+                autoGainControl: constraints.autoGainControl,
+              },
+              video: false,
+            });
+            if (stream) break;
+          } catch {
+            // Continue checking next candidate hardware device
+          }
+        }
+      } catch (err) {
+        lastError = err;
+      }
+    }
+
+    // 4. Final attempt: bare audio request
+    if (!stream) {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      } catch (err) {
+        lastError = err;
+      }
+    }
+
+    if (!stream) {
+      throw lastError || new Error('Could not access microphone hardware.');
+    }
+
+    this.stream = stream;
 
     this.sourceNode = this.ctx.createMediaStreamSource(this.stream);
 
@@ -81,6 +151,14 @@ class AudioManager {
     this.frequencyBuffer = new Uint8Array(this.analyserNode.frequencyBinCount);
 
     return this.stream;
+  }
+
+  getActiveDeviceId(): string | null {
+    if (!this.stream) return null;
+    const track = this.stream.getAudioTracks()[0];
+    if (!track) return null;
+    const settings = track.getSettings();
+    return settings.deviceId || null;
   }
 
   setMonitoring(enabled: boolean, volume = 0.5) {

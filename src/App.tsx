@@ -154,7 +154,23 @@ const App: React.FC = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       refreshDevices();
-    }, 200);
+    }, 100);
+
+    // If permission was already granted in browser, refresh immediately to get real labels
+    if (typeof navigator !== 'undefined' && navigator.permissions && navigator.permissions.query) {
+      navigator.permissions
+        .query({ name: 'microphone' as PermissionName })
+        .then((permissionStatus) => {
+          if (permissionStatus.state === 'granted') {
+            refreshDevices();
+          }
+          permissionStatus.onchange = () => {
+            refreshDevices();
+          };
+        })
+        .catch(() => {});
+    }
+
     if (navigator.mediaDevices && navigator.mediaDevices.addEventListener) {
       navigator.mediaDevices.addEventListener('devicechange', refreshDevices);
       return () => {
@@ -171,7 +187,10 @@ const App: React.FC = () => {
     try {
       await audioManager.initAudio(constraints);
       setIsActive(true);
-      await refreshDevices();
+      const activeId = audioManager.getActiveDeviceId();
+      if (activeId && activeId !== constraints.deviceId) {
+        setConstraints((prev) => ({ ...prev, deviceId: activeId }));
+      }
     } catch (err: unknown) {
       console.error('Microphone access failed:', err);
       const e = err as Error;
@@ -189,10 +208,20 @@ const App: React.FC = () => {
         setPermissionError(
           'No microphone hardware detected. Please plug in a microphone and retry.',
         );
+      } else if (
+        e.name === 'NotReadableError' ||
+        (e.message && e.message.toLowerCase().includes('could not start audio source'))
+      ) {
+        setPermissionError(
+          'Microphone is busy or could not be read by the system audio daemon. Please try selecting a specific hardware device from the dropdown above.',
+        );
       } else {
         setPermissionError(e.message || 'Could not access microphone.');
       }
       setIsActive(false);
+    } finally {
+      // Crucial: Always refresh devices so user gets real hardware labels even if initial default mic failed
+      await refreshDevices();
     }
   };
 

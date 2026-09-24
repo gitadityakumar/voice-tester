@@ -83,12 +83,22 @@ export const DeviceSelector: React.FC<DeviceSelectorProps> = ({
             description: 'System default audio input',
           },
         ]
-      : devices.map((device, idx) => ({
-          value: device.deviceId,
-          label: device.label || `Microphone ${idx + 1}`,
-          icon: getDeviceIcon(device.label || ''),
-          description: device.deviceId ? `Audio input channel ${idx + 1}` : 'Default input',
-        }));
+      : [
+          {
+            value: '',
+            label: 'Default Microphone (System Recommended)',
+            icon: <Mic className="h-4 w-4 text-emerald-500 shrink-0" />,
+            description: 'System default audio input',
+          },
+          ...devices
+            .filter((d) => d.deviceId && d.deviceId !== 'default')
+            .map((device, idx) => ({
+              value: device.deviceId,
+              label: device.label || `Microphone ${idx + 1}`,
+              icon: getDeviceIcon(device.label || ''),
+              description: `Hardware input channel ${idx + 1}`,
+            })),
+        ];
 
   return (
     <Card className="border-neutral-200/80 dark:border-neutral-800/80">
