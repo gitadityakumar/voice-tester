@@ -1,3 +1,20 @@
 allowBuilds:
   esbuild: true
   workerd: true
+
+minimumReleaseAgeExclude:
+  - '@fallow-cli/darwin-arm64@3.41.0'
+  - '@fallow-cli/darwin-x64@3.41.0'
+  - '@fallow-cli/linux-arm64-gnu@3.41.0'
+  - '@fallow-cli/linux-arm64-musl@3.41.0'
+  - '@fallow-cli/linux-x64-gnu@3.41.0'
+  - '@fallow-cli/linux-x64-musl@3.41.0'
+  - '@fallow-cli/win32-arm64-msvc@3.41.0'
+  - '@fallow-cli/win32-x64-msvc@3.41.0'
+  - fallow-type-aware@3.41.0
+  - fallow@3.41.0
+
+overrides:
+  undici: '>=7.30.2'
+  postcss-selector-parser: '>=6.1.5'
+  source-map-js: '>=1.2.2'
